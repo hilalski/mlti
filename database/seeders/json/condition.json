@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "kondisi": "Baik"
+    },
+    {
+        "id": 2,
+        "kondisi": "Rusak Ringan"
+    },
+    {
+        "id": 3,
+        "kondisi": "Rusak Berat"
+    },
+    {
+        "id": 99,
+        "kondisi": "Tidak Diketahui"
+    }
+]

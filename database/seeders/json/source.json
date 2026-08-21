@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "asal": "Pusat"
+    },
+    {
+        "id": 2,
+        "asal": "Provinsi"
+    },
+    {
+        "id": 99,
+        "asal": "Tidak Diketahui"
+    }
+]

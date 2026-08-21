@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "jenis": "PC"
+    },
+    {
+        "id": 2,
+        "jenis": "Laptop"
+    },
+    {
+        "id": 3,
+        "jenis": "Printer"
+    },
+    {
+        "id": 4,
+        "jenis": "UPS"
+    },
+    {
+        "id": 5,
+        "jenis": "Scanner"
+    },
+    {
+        "id": 6,
+        "jenis": "Viewer"
+    },
+    {
+        "id": 7,
+        "jenis": "Tablet"
+    },
+    {
+        "id": 99,
+        "jenis": "Tidak Diketahui"
+    }
+]

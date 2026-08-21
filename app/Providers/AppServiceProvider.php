@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Facades\Blade::directive('title', function ($expression) {
+            return "<?php \$__env->startSection('title', $expression); ?>";
+        });
     }
 }

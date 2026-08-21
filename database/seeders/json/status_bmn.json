@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "status": "Aktif"
+    },
+    {
+        "id": 2,
+        "status": "Tidak Aktif"
+    },
+    {
+        "id": 99,
+        "status": "Tidak Diketahui"
+    }
+]

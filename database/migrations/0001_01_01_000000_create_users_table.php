@@ -11,14 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('teams', function (Blueprint $table) {
+            $table->unsignedBigInteger('id')->primary();
+            $table->string('fungsi');
+            $table->timestamps();
+        });
+
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->bigInteger('nip_lama')->primary();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('email')->nullable();
+            $table->string('nip_baru', 30)->nullable();
+            $table->unsignedBigInteger('fungsi')->default(99);
+            $table->string('jabatan')->nullable();
+            $table->string('password')->nullable();
+            $table->tinyInteger('is_jarkom')->default(0);
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('fungsi')->references('id')->on('teams');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -43,7 +54,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('users');
+        Schema::dropIfExists('teams');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
 };
+

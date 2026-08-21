@@ -1,0 +1,709 @@
+[
+    {
+        "nip_lama": 340014249,
+        "nama": "Aidil Adha, S.E., M.E.",
+        "nip_baru": "196703221994011001",
+        "fungsi": 1,
+        "jabatan": "Kepala"
+    },
+    {
+        "nip_lama": 340014611,
+        "nama": "Eko Libri Ardi, S.E., M.M., CA.",
+        "nip_baru": "197309251994031002",
+        "fungsi": 2,
+        "jabatan": "Kepala Bagian Umum"
+    },
+    {
+        "nip_lama": 340014682,
+        "nama": "Sutino, S.E.",
+        "nip_baru": "196902101994031006",
+        "fungsi": 3,
+        "jabatan": "Arsiparis Ahli Madya"
+    },
+    {
+        "nip_lama": 340016477,
+        "nama": "Gafur, S.ST., M.Si.",
+        "nip_baru": "197907272002121010",
+        "fungsi": 3,
+        "jabatan": "Analis Pengelola Keuangan APBN Ahli Madya"
+    },
+    {
+        "nip_lama": 340050052,
+        "nama": "Daru Atmojo, S.ST., ME.",
+        "nip_baru": "198607102009021005",
+        "fungsi": 3,
+        "jabatan": "Analis Pengelola Keuangan APBN Ahli Madya"
+    },
+    {
+        "nip_lama": 340016847,
+        "nama": "Fuad Hasyim, S.M.",
+        "nip_baru": "197502042002121003",
+        "fungsi": 3,
+        "jabatan": "Pranata Humas Ahli Pertama"
+    },
+    {
+        "nip_lama": 340058230,
+        "nama": "Eka Putri Maya Sari, S.ST.",
+        "nip_baru": "199308112018022001",
+        "fungsi": 3,
+        "jabatan": "Statistisi Ahli Pertama"
+    },
+    {
+        "nip_lama": 340018098,
+        "nama": "Sigit Trawoco, S.E., M.I.Kom.",
+        "nip_baru": "198606082006041001",
+        "fungsi": 3,
+        "jabatan": "Analis Anggaran Ahli Pertama"
+    },
+    {
+        "nip_lama": 340055841,
+        "nama": "Mira Febriana, S.ST., M.Ec., M.S.E.",
+        "nip_baru": "198802072012112001",
+        "fungsi": 3,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340054647,
+        "nama": "Dwi Utaminingsih, S.Psi.",
+        "nip_baru": "198807032011012019",
+        "fungsi": 3,
+        "jabatan": "Asesor SDM Aparatur Ahli Muda"
+    },
+    {
+        "nip_lama": 340054663,
+        "nama": "Virnancya Nuraini Yonathan, SH., MH.",
+        "nip_baru": "198509212011012010",
+        "fungsi": 3,
+        "jabatan": "Penyuluh Hukum Ahli Muda"
+    },
+    {
+        "nip_lama": 340057887,
+        "nama": "Darmawan, S.ST.",
+        "nip_baru": "199405122017011001",
+        "fungsi": 3,
+        "jabatan": "Analis SDMA Ahli Muda"
+    },
+    {
+        "nip_lama": 340018099,
+        "nama": "Siti Marfuah, S.E.",
+        "nip_baru": "198711082006042002",
+        "fungsi": 3,
+        "jabatan": "Analis SDMA Ahli Pertama"
+    },
+    {
+        "nip_lama": 340018936,
+        "nama": "Chaidir, S.A.P.",
+        "nip_baru": "197304262006041009",
+        "fungsi": 3,
+        "jabatan": "Pelaksana/Pengelola Surat"
+    },
+    {
+        "nip_lama": 340063668,
+        "nama": "Akbar Fahri Dinanta, SH.",
+        "nip_baru": "199601262025061002",
+        "fungsi": 3,
+        "jabatan": "Penyuluh Hukum Ahli Pertama"
+    },
+    {
+        "nip_lama": 340063944,
+        "nama": "Sedber Novrianti, A.Md.",
+        "nip_baru": "199701092025062006",
+        "fungsi": 3,
+        "jabatan": "Pranata SDMA Terampil"
+    },
+    {
+        "nip_lama": 340013114,
+        "nama": "Herlina, S.E.",
+        "nip_baru": "197009271992032003",
+        "fungsi": 3,
+        "jabatan": "Pelaksana/Analis Pengelola Keuangan APBN Ahli Pertama"
+    },
+    {
+        "nip_lama": 340017517,
+        "nama": "Mitha Rama Sari, S.E.",
+        "nip_baru": "198610202005022001",
+        "fungsi": 3,
+        "jabatan": "Analis Pengelola Keuangan APBN Ahli Muda"
+    },
+    {
+        "nip_lama": 340054652,
+        "nama": "Liana, S.E.",
+        "nip_baru": "198802072011012019",
+        "fungsi": 3,
+        "jabatan": "Analis Pengelola Keuangan APBN Ahli Pertama"
+    },
+    {
+        "nip_lama": 340061101,
+        "nama": "Marniala Larasati Situmorang, A.Md.Kb.N.",
+        "nip_baru": "200105102022012001",
+        "fungsi": 3,
+        "jabatan": "Pranata Keuangan APBN Terampil"
+    },
+    {
+        "nip_lama": 340051219,
+        "nama": "Marisa Hariani, S.E., M.I.Kom.",
+        "nip_baru": "198602172009022008",
+        "fungsi": 3,
+        "jabatan": "Pelaksana"
+    },
+    {
+        "nip_lama": 340062133,
+        "nama": "Aqilla Haya, A.Md.Stat.",
+        "nip_baru": "200009032023022005",
+        "fungsi": 3,
+        "jabatan": "Statistisi Terampil"
+    },
+    {
+        "nip_lama": 340016846,
+        "nama": "M. Wahyudi, S.A.P.",
+        "nip_baru": "198008162002121006",
+        "fungsi": 3,
+        "jabatan": "Pelaksana/Pranata Kearsipan"
+    },
+    {
+        "nip_lama": 340054662,
+        "nama": "Tuberwanlastu, S.M.",
+        "nip_baru": "198102172011011005",
+        "fungsi": 3,
+        "jabatan": "Arsiparis Ahli Pertama"
+    },
+    {
+        "nip_lama": 340014688,
+        "nama": "Juniar, S.E.",
+        "nip_baru": "197006201994032001",
+        "fungsi": 3,
+        "jabatan": "Pelaksana/Penata Laksana Barang Terampil"
+    },
+    {
+        "nip_lama": 340017519,
+        "nama": "Asni Junita, S.E.",
+        "nip_baru": "198606292005022001",
+        "fungsi": 3,
+        "jabatan": "Statistisi Mahir"
+    },
+    {
+        "nip_lama": 340063917,
+        "nama": "Reza Eka Putra, A.Md.Ds.",
+        "nip_baru": "199912202025061002",
+        "fungsi": 3,
+        "jabatan": "Arsiparis Terampil"
+    },
+    {
+        "nip_lama": 340062122,
+        "nama": "Aida Devanty Putri, A.Md.Stat.",
+        "nip_baru": "200108222023022002",
+        "fungsi": 4,
+        "jabatan": "Statistisi Terampil"
+    },
+    {
+        "nip_lama": 340013729,
+        "nama": "Sunandar, SE., M.Si.",
+        "nip_baru": "197405041993121001",
+        "fungsi": 3,
+        "jabatan": "Pengelola PBJ Ahli Muda"
+    },
+    {
+        "nip_lama": 340056007,
+        "nama": "Diyas Marliyanda, S.E.",
+        "nip_baru": "198903232012121001",
+        "fungsi": 3,
+        "jabatan": "Pengelola PBJ Ahli Muda"
+    },
+    {
+        "nip_lama": 340061235,
+        "nama": "Della Ayu Syafila, S.E.",
+        "nip_baru": "199504092022032012",
+        "fungsi": 3,
+        "jabatan": "Pengelola PBJ Ahli Pertama"
+    },
+    {
+        "nip_lama": 340063997,
+        "nama": "A. Hafiz Kamal",
+        "nip_baru": "197105312025211007",
+        "fungsi": 3,
+        "jabatan": "PPPK/Operator Layanan Operasional"
+    },
+    {
+        "nip_lama": 340065022,
+        "nama": "M. Hamka Puri",
+        "nip_baru": "199206112025211055",
+        "fungsi": 3,
+        "jabatan": "PPPK/Operator Layanan Operasional"
+    },
+    {
+        "nip_lama": 340065028,
+        "nama": "M. Thoriqul Baroroh, S.IP.",
+        "nip_baru": "199203152025211053",
+        "fungsi": 3,
+        "jabatan": "PPPK/Penata Layanan Operasional"
+    },
+    {
+        "nip_lama": 340065155,
+        "nama": "Momon Suherman",
+        "nip_baru": "199207172025211053",
+        "fungsi": 3,
+        "jabatan": "PPPK/Operator Layanan Operasional"
+    },
+    {
+        "nip_lama": 340065934,
+        "nama": "Wigri Yantoro Putra",
+        "nip_baru": "198201272025211021",
+        "fungsi": 3,
+        "jabatan": "PPPK/Operator Layanan Operasional"
+    },
+    {
+        "nip_lama": 340065949,
+        "nama": "Yando Dyna Fictorio",
+        "nip_baru": "198110222025211033",
+        "fungsi": 3,
+        "jabatan": "PPPK/Operator Layanan Operasional"
+    },
+    {
+        "nip_lama": 340016277,
+        "nama": "Sisilia Nurteta, S.ST., M.Si.",
+        "nip_baru": "197905242000122001",
+        "fungsi": 5,
+        "jabatan": "Statistisi Ahli Madya"
+    },
+    {
+        "nip_lama": 340016976,
+        "nama": "Nova Moestafa, S.ST., M.Si.",
+        "nip_baru": "198104302003121003",
+        "fungsi": 5,
+        "jabatan": "Statistisi Ahli Madya"
+    },
+    {
+        "nip_lama": 340015539,
+        "nama": "Erbiyati Cahyaningtyas, S.ST.",
+        "nip_baru": "197603181997122001",
+        "fungsi": 5,
+        "jabatan": "Statistisi Ahli Madya"
+    },
+    {
+        "nip_lama": 340020005,
+        "nama": "Juliana Marintan Siahaan, S.ST.",
+        "nip_baru": "198507222008012005",
+        "fungsi": 5,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340016170,
+        "nama": "Rita Rif'ati, S.ST., M.Si.",
+        "nip_baru": "197806252000122001",
+        "fungsi": 5,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340015872,
+        "nama": "Ani Dwi Nugraeni, S.ST.",
+        "nip_baru": "197502231999032003",
+        "fungsi": 5,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340057209,
+        "nama": "Sinta Bela, S.ST.",
+        "nip_baru": "199311092014122001",
+        "fungsi": 5,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340054168,
+        "nama": "Dian Primasari Azwir, S.ST., M.Sc.",
+        "nip_baru": "198904152010122004",
+        "fungsi": 5,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340057667,
+        "nama": "Linda Annisa, SST",
+        "nip_baru": "199507292017012002",
+        "fungsi": 5,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340016191,
+        "nama": "Eva Riani, S.ST., M.E.",
+        "nip_baru": "197909012000122001",
+        "fungsi": 6,
+        "jabatan": "Statistisi Ahli Madya"
+    },
+    {
+        "nip_lama": 340016060,
+        "nama": "Eny Tristanti, S.ST, ME.",
+        "nip_baru": "197702061999122001",
+        "fungsi": 6,
+        "jabatan": "Statistisi Ahli Madya"
+    },
+    {
+        "nip_lama": 340053548,
+        "nama": "Heni Widiyanti, S.Si., ME.",
+        "nip_baru": "198201242010032004",
+        "fungsi": 6,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340017520,
+        "nama": "Fathina Mufrodi, SE",
+        "nip_baru": "198408272005022001",
+        "fungsi": 6,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340054653,
+        "nama": "Linda Marlina, S.Si",
+        "nip_baru": "198805102011012020",
+        "fungsi": 6,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340058851,
+        "nama": "Muhammad Al Fatih, S.Tr.Stat.",
+        "nip_baru": "199606272019011001",
+        "fungsi": 6,
+        "jabatan": "Statistisi Ahli Pertama"
+    },
+    {
+        "nip_lama": 340018514,
+        "nama": "Vita Eisynta Dewi, S.E., M.E.",
+        "nip_baru": "198311082006042016",
+        "fungsi": 6,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340060068,
+        "nama": "Eka Aulia Liusta, S.Tr. Stat.",
+        "nip_baru": "199809152021042001",
+        "fungsi": 6,
+        "jabatan": "Statistisi Ahli Pertama"
+    },
+    {
+        "nip_lama": 340015731,
+        "nama": "Susiawati Kristiarini, S.ST.",
+        "nip_baru": "197612031999012001",
+        "fungsi": 7,
+        "jabatan": "Statistisi Ahli Madya"
+    },
+    {
+        "nip_lama": 340054174,
+        "nama": "Vina Riyanti, S.ST.",
+        "nip_baru": "198806302010122005",
+        "fungsi": 7,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340016971,
+        "nama": "Vitalia Susanti, M.Si.",
+        "nip_baru": "198102222003122002",
+        "fungsi": 7,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340019122,
+        "nama": "Fitria Ipada, S.ST.",
+        "nip_baru": "198407032007012004",
+        "fungsi": 7,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340059155,
+        "nama": "Annisa Ayu Wulandari, S.Si.",
+        "nip_baru": "199408052019032002",
+        "fungsi": 7,
+        "jabatan": "Statistisi Ahli Pertama"
+    },
+    {
+        "nip_lama": 340056947,
+        "nama": "Eka Julita Irmayanti, S.ST.",
+        "nip_baru": "199107282014102001",
+        "fungsi": 7,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340055852,
+        "nama": "Muhammad Zulky Al Amri, S.ST., M.Si.",
+        "nip_baru": "198906192012111001",
+        "fungsi": 7,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340013506,
+        "nama": "Muhisam, S.ST.",
+        "nip_baru": "197303221993011002",
+        "fungsi": 7,
+        "jabatan": "Statistisi Penyelia"
+    },
+    {
+        "nip_lama": 340062195,
+        "nama": "Muhammad Arief Al Ghazale, A.Md.Stat.",
+        "nip_baru": "200102232023021004",
+        "fungsi": 7,
+        "jabatan": "Statistisi Terampil"
+    },
+    {
+        "nip_lama": 340016973,
+        "nama": "Oeliestina, S.ST.",
+        "nip_baru": "198102042003122003",
+        "fungsi": 8,
+        "jabatan": "Statistisi Ahli Madya"
+    },
+    {
+        "nip_lama": 340016187,
+        "nama": "Sumarmi, S.ST, M.Si.",
+        "nip_baru": "197802112000122001",
+        "fungsi": 8,
+        "jabatan": "Statistisi Ahli Madya"
+    },
+    {
+        "nip_lama": 340050143,
+        "nama": "Lisa Gusmanita, S.ST., M.E.",
+        "nip_baru": "198608312009022006",
+        "fungsi": 8,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340016574,
+        "nama": "Poppi Marini, M.Si.",
+        "nip_baru": "197703232002122007",
+        "fungsi": 8,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340054175,
+        "nama": "Zulfichar Anggara Adhi Mahendra, S.ST",
+        "nip_baru": "198807262010121005",
+        "fungsi": 8,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340060289,
+        "nama": "Rieko Nopriady, S.Tr.Stat.",
+        "nip_baru": "199811292021041001",
+        "fungsi": 8,
+        "jabatan": "Statistisi Ahli Pertama"
+    },
+    {
+        "nip_lama": 340058939,
+        "nama": "Ridea Anggraini, S.Tr.Stat.",
+        "nip_baru": "199603102019012001",
+        "fungsi": 8,
+        "jabatan": "Statistisi Ahli Pertama"
+    },
+    {
+        "nip_lama": 340056458,
+        "nama": "Soni Ahmad Wirawan, SST",
+        "nip_baru": "199003122013111002",
+        "fungsi": 8,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340059165,
+        "nama": "Ryan Pasca Aulia, S.Si.",
+        "nip_baru": "199309162019031002",
+        "fungsi": 8,
+        "jabatan": "Pelaksana"
+    },
+    {
+        "nip_lama": 340013013,
+        "nama": "Iman Karyadi, S.ST.",
+        "nip_baru": "196910081991121001",
+        "fungsi": 9,
+        "jabatan": "Pranata Komputer Ahli Madya"
+    },
+    {
+        "nip_lama": 340016975,
+        "nama": "Nopriansyah, S.ST., M.Si.",
+        "nip_baru": "198011172003121001",
+        "fungsi": 9,
+        "jabatan": "Statistisi Ahli Madya"
+    },
+    {
+        "nip_lama": 340055712,
+        "nama": "Adi Permana, S.ST., MSE.",
+        "nip_baru": "198809302012111001",
+        "fungsi": 9,
+        "jabatan": "Pranata Komputer Ahli Muda"
+    },
+    {
+        "nip_lama": 340053273,
+        "nama": "Theresa Putri, S.ST",
+        "nip_baru": "198806152009122002",
+        "fungsi": 9,
+        "jabatan": "Statistisi Ahli Muda"
+    },
+    {
+        "nip_lama": 340056760,
+        "nama": "Rizki Ananda, S.ST., M.Si.",
+        "nip_baru": "199307302014102001",
+        "fungsi": 9,
+        "jabatan": "Statistisi Ahli Pertama"
+    },
+    {
+        "nip_lama": 340060080,
+        "nama": "Fadhlika Anggit Santoso Putro, S.Tr.Stat.",
+        "nip_baru": "199806012021041001",
+        "fungsi": 9,
+        "jabatan": "Pranata Komputer Ahli Pertama"
+    },
+    {
+        "nip_lama": 340058485,
+        "nama": "Sandy Pradana, S.ST.",
+        "nip_baru": "199508182018021001",
+        "fungsi": 9,
+        "jabatan": "Pranata Komputer Ahli Pertama"
+    },
+    {
+        "nip_lama": 340059630,
+        "nama": "Mifthahul Jannah, S.Tr.Stat.",
+        "nip_baru": "199804252019122002",
+        "fungsi": 9,
+        "jabatan": "Statistisi Ahli Pertama"
+    },
+    {
+        "nip_lama": 340057694,
+        "nama": "Oemar Syarief Wibisono, S.ST., M.Kom.",
+        "nip_baru": "199409292017011001",
+        "fungsi": 9,
+        "jabatan": "Pranata Komputer Ahli Pertama"
+    },
+    {
+        "nip_lama": 340066553,
+        "nama": "Yanuar Nurul Hilal, S.Tr.Stat.",
+        "nip_baru": "200201162026031001",
+        "fungsi": 9,
+        "jabatan": "CPNS/Pranata Komputer Ahli Pertama"
+    },
+    {
+        "nip_lama": 340061727,
+        "nama": "Cynthia As Bahri, S.Tr.Stat",
+        "nip_baru": "200010262023022003",
+        "fungsi": 9,
+        "jabatan": "Pranata Komputer Ahli Pertama"
+    },
+    {
+        "nip_lama": 340054170,
+        "nama": "Indah Sulvaria, SST, MBA",
+        "nip_baru": "198907202010122004",
+        "fungsi": 9,
+        "jabatan": "Pelaksana"
+    },
+    {
+        "nip_lama": 1,
+        "nama": "Ruang Aula",
+        "nip_baru": "1",
+        "fungsi": 3,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 2,
+        "nama": "Ruang Neraca",
+        "nip_baru": "2",
+        "fungsi": 8,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 3,
+        "nama": "Ruang Sosial",
+        "nip_baru": "3",
+        "fungsi": 5,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 4,
+        "nama": "Ruang Kepala - Kabag - Sekretaris",
+        "nip_baru": "4",
+        "fungsi": 3,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 5,
+        "nama": "Ruang SDM",
+        "nip_baru": "5",
+        "fungsi": 3,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 6,
+        "nama": "Ruang Keuangan",
+        "nip_baru": "6",
+        "fungsi": 3,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 7,
+        "nama": "Ruang Pajale",
+        "nip_baru": "7",
+        "fungsi": 3,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 8,
+        "nama": "Ruang IPDS",
+        "nip_baru": "8",
+        "fungsi": 9,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 9,
+        "nama": "Ruang PST",
+        "nip_baru": "9",
+        "fungsi": 9,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 10,
+        "nama": "Ruang Distribusi",
+        "nip_baru": "10",
+        "fungsi": 7,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 11,
+        "nama": "Ruang Madya",
+        "nip_baru": "11",
+        "fungsi": 3,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 12,
+        "nama": "Ruang Umum",
+        "nip_baru": "12",
+        "fungsi": 3,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 13,
+        "nama": "Ruang Garda",
+        "nip_baru": "13",
+        "fungsi": 3,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 14,
+        "nama": "Ruang Produksi",
+        "nip_baru": "14",
+        "fungsi": 6,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 15,
+        "nama": "Gudang",
+        "nip_baru": "15",
+        "fungsi": 3,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 16,
+        "nama": "Lelang",
+        "nip_baru": "16",
+        "fungsi": 3,
+        "jabatan": "-"
+    },
+    {
+        "nip_lama": 99,
+        "nama": "Tidak Diketahui",
+        "nip_baru": "99",
+        "fungsi": 99,
+        "jabatan": "-"
+    }
+]
