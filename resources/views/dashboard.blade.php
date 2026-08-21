@@ -171,7 +171,7 @@
               <h6 class="fw-bold mb-2">Pilih Perangkat Pengganti (Tipe: {{ $device->type->jenis ?? 'Lainnya' }})</h6>
               
               <div class="mb-3 position-relative">
-                <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                <!-- <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i> -->
                 <input type="text" class="form-control ps-5 swap-search-input" placeholder="Cari perangkat berdasarkan nama, merek, atau BMN..." data-device-id="{{ $device->id }}">
               </div>
               
@@ -195,7 +195,7 @@
                       @csrf
                       <input type="hidden" name="old_device_id" value="{{ $device->id }}">
                       <input type="hidden" name="new_device_id" value="{{ $avail->id }}">
-                      <button type="submit" class="btn btn-sm btn-success text-white fw-bold">
+                      <button type="submit" class="btn btn-sm btn-primary text-white fw-bold">
                         Pilih & Ganti
                       </button>
                     </form>
@@ -241,7 +241,7 @@
         
         <!-- Search bar inside Add modal -->
         <div class="mb-3 position-relative">
-          <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+          <!-- <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i> -->
           <input type="text" id="addDeviceSearchInput" class="form-control ps-5" placeholder="Cari perangkat berdasarkan nama, merek, atau BMN...">
         </div>
         
@@ -279,7 +279,7 @@
                     <form action="{{ route('dashboard.devices.assign') }}" method="POST" onsubmit="return confirm('Kuasai perangkat ini?');">
                       @csrf
                       <input type="hidden" name="device_id" value="{{ $avail->id }}">
-                      <button type="submit" class="btn btn-sm btn-success text-white fw-bold">
+                      <button type="submit" class="btn btn-sm btn-primary text-white fw-bold">
                         <i class="bi bi-plus-circle me-1"></i> Kuasai
                       </button>
                     </form>
