@@ -15,7 +15,12 @@ class ReportController extends Controller
     public function create($device_id)
     {
         $device = Device::where('id', $device_id)
-            ->where('id_user', Auth::user()->nip_lama)
+            ->where(function($q) {
+                $q->where('id_user', Auth::user()->nip_lama);
+                if (Auth::user()->id_ruang) {
+                    $q->orWhere('id_user', Auth::user()->id_ruang);
+                }
+            })
             ->firstOrFail();
 
         return view('report.create', compact('device'));
@@ -30,7 +35,12 @@ class ReportController extends Controller
         ]);
 
         $device = Device::where('id', $request->device_id)
-            ->where('id_user', Auth::user()->nip_lama)
+            ->where(function($q) {
+                $q->where('id_user', Auth::user()->nip_lama);
+                if (Auth::user()->id_ruang) {
+                    $q->orWhere('id_user', Auth::user()->id_ruang);
+                }
+            })
             ->firstOrFail();
 
         // Check if there is already an active report for this device
@@ -57,13 +67,18 @@ class ReportController extends Controller
             Notification::send($jarkomUsers, new NewDeviceReport($report));
         }
 
-        return redirect()->route('dashboard')->with('success', 'Laporan kerusakan berhasil dikirim! Tim Jarkom telah dinotifikasi.');
+        return redirect()->route('dashboard')->with('success', 'Laporan kerusakan berhasil dikirim!');
     }
 
     public function status($device_id)
     {
         $device = Device::where('id', $device_id)
-            ->where('id_user', Auth::user()->nip_lama)
+            ->where(function($q) {
+                $q->where('id_user', Auth::user()->nip_lama);
+                if (Auth::user()->id_ruang) {
+                    $q->orWhere('id_user', Auth::user()->id_ruang);
+                }
+            })
             ->firstOrFail();
 
         // Get all reports for this device, latest first
@@ -73,5 +88,29 @@ class ReportController extends Controller
             ->get();
 
         return view('report.status', compact('device', 'reports'));
+    }
+
+    public function history()
+    {
+        $user = Auth::user();
+        
+        $reports = Report::where('reported_by', $user->nip_lama)
+            ->with(['device.type'])
+            ->latest()
+            ->paginate(10);
+            
+        return view('reports.history', compact('reports'));
+    }
+
+    public function showReport($id)
+    {
+        $user = Auth::user();
+        
+        $report = Report::where('id', $id)
+            ->where('reported_by', $user->nip_lama)
+            ->with(['device.type', 'device.condition', 'reporter', 'technician', 'vendor'])
+            ->firstOrFail();
+            
+        return view('reports.show', compact('report'));
     }
 }

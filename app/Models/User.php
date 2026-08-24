@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['nip_lama', 'name', 'email', 'nip_baru', 'fungsi', 'jabatan', 'password', 'is_jarkom'])]
+#[Fillable(['nip_lama', 'name', 'email', 'nip_baru', 'fungsi', 'jabatan', 'password', 'is_jarkom', 'id_ruang'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -42,5 +42,10 @@ class User extends Authenticatable
     public function reports()
     {
         return $this->hasMany(Report::class, 'reported_by', 'nip_lama');
+    }
+
+    public function room()
+    {
+        return $this->belongsTo(Room::class, 'id_ruang');
     }
 }

@@ -1,0 +1,74 @@
+[
+    {
+        "id": 1,
+        "ruang": "Ruang Aula"
+    },
+    {
+        "id": 2,
+        "ruang": "Ruang Neraca"
+    },
+    {
+        "id": 3,
+        "ruang": "Ruang Sosial"
+    },
+    {
+        "id": 4,
+        "ruang": "Ruang Kepala - Kabag - Sekretaris"
+    },
+    {
+        "id": 5,
+        "ruang": "Ruang SDM"
+    },
+    {
+        "id": 6,
+        "ruang": "Ruang Keuangan"
+    },
+    {
+        "id": 7,
+        "ruang": "Ruang Pajale"
+    },
+    {
+        "id": 8,
+        "ruang": "Ruang IPDS"
+    },
+    {
+        "id": 9,
+        "ruang": "Ruang PST"
+    },
+    {
+        "id": 10,
+        "ruang": "Ruang Distribusi"
+    },
+    {
+        "id": 11,
+        "ruang": "Ruang Madya"
+    },
+    {
+        "id": 12,
+        "ruang": "Ruang Umum"
+    },
+    {
+        "id": 13,
+        "ruang": "Ruang Garda"
+    },
+    {
+        "id": 14,
+        "ruang": "Ruang Produksi"
+    },
+    {
+        "id": 15,
+        "ruang": "Gudang"
+    },
+    {
+        "id": 16,
+        "ruang": "Lelang"
+    },
+    {
+        "id": 17,
+        "ruang": "Ruang Humas"
+    },
+    {
+        "id": 99,
+        "ruang": "Tidak Diketahui"
+    }
+]

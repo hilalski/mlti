@@ -29,6 +29,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/report/create/{device_id}', [ReportController::class, 'create'])->name('report.create');
     Route::post('/report', [ReportController::class, 'store'])->name('report.store');
     Route::get('/report/status/{device_id}', [ReportController::class, 'status'])->name('report.status');
+    
+    // User Report History
+    Route::get('/reports/history', [ReportController::class, 'history'])->name('reports.history');
+    Route::get('/reports/history/{id}', [ReportController::class, 'showReport'])->name('reports.history.show');
 });
 
 // Admin / Jarkom Flow
@@ -36,6 +40,10 @@ Route::middleware(['auth', 'jarkom'])->prefix('admin')->as('admin.')->group(func
     Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/{id}', [AdminReportController::class, 'show'])->name('reports.show');
     Route::patch('/reports/{id}', [AdminReportController::class, 'update'])->name('reports.update');
+    
+    // CRUD Management resources
+    Route::resource('/users', \App\Http\Controllers\Admin\UserController::class);
+    Route::resource('/devices', \App\Http\Controllers\Admin\DeviceController::class);
     
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Room;
 use App\Models\Device;
 use App\Models\Type;
 use App\Models\Condition;
@@ -21,6 +22,12 @@ class DatabaseSeeder extends Seeder
         $teams = json_decode(file_get_contents(database_path('seeders/json/team.json')), true);
         foreach ($teams as $team) {
             Team::updateOrCreate(['id' => $team['id']], ['fungsi' => $team['fungsi']]);
+        }
+
+        // Seed Rooms
+        $rooms = json_decode(file_get_contents(database_path('seeders/json/room.json')), true);
+        foreach ($rooms as $room) {
+            Room::updateOrCreate(['id' => $room['id']], ['ruang' => $room['ruang']]);
         }
 
         // 2. Seed Types
@@ -60,9 +67,8 @@ class DatabaseSeeder extends Seeder
             $nipLama = (int)$u['nip_lama'];
             $userNips[] = $nipLama;
 
-            // Determine if Jarkom (is_jarkom = 1)
-            // Let's set is_jarkom = 1 for anyone in fungsi = 9 (IPDS/IT/Jarkom team)
-            $isJarkom = ($u['fungsi'] == 9) ? 1 : 0;
+            $isJarkom = isset($u['is_jarkom']) ? (int)$u['is_jarkom'] : 0;
+            $idRuang = isset($u['id_ruang']) ? (int)$u['id_ruang'] : null;
 
             // Generate clean email based on name
             $cleanName = preg_replace('/[^a-zA-Z0-9]/', '', strtolower(explode(',', $u['nama'])[0]));
@@ -78,6 +84,7 @@ class DatabaseSeeder extends Seeder
                     'jabatan' => $u['jabatan'],
                     'password' => Hash::make('password'),
                     'is_jarkom' => $isJarkom,
+                    'id_ruang' => $idRuang,
                 ]
             );
         }
@@ -89,11 +96,12 @@ class DatabaseSeeder extends Seeder
 
         // 7. Seed Devices
         $devices = json_decode(file_get_contents(database_path('seeders/json/device.json')), true);
+        $roomIds = Room::pluck('id')->toArray();
         foreach ($devices as $d) {
             $idUser = $d['id_user'];
-            // Check if user exists in the database
-            if (!in_array($idUser, $userNips)) {
-                $idUser = null; // Set to null if user doesn't exist
+            // Check if user or room exists in the database
+            if (!in_array($idUser, $userNips) && !in_array($idUser, $roomIds)) {
+                $idUser = null; // Set to null if neither exists
             }
 
             // Fallback for foreign keys

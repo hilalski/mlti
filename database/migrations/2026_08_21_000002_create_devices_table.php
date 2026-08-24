@@ -23,7 +23,6 @@ return new class extends Migration
             $table->timestamps();
 
             // Foreign keys
-            $table->foreign('id_user')->references('nip_lama')->on('users')->onDelete('set null');
             $table->foreign('id_type')->references('id')->on('types');
             $table->foreign('id_source')->references('id')->on('sources');
             $table->foreign('id_status_bmn')->references('id')->on('status_bmn');

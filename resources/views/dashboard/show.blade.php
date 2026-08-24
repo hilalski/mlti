@@ -20,13 +20,13 @@
     <!-- Specs Column -->
     <div class="col-lg-5 col-md-12">
       <div class="card shadow-sm border-0 mb-4 h-100">
-        <div class="card-header bg-dark">
+        <div class="card-header d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #FF84BA, #99C2FF) !important; padding: 15px 20px !important; margin: -24px -24px 20px -24px !important; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom: none !important;">
           <h5 class="card-title my-0 text-white"><i class="bi bi-info-circle me-1"></i> Spesifikasi Perangkat</h5>
         </div>
         <div class="card-body pt-3">
           
           <div class="text-center py-3 border-bottom mb-3">
-            <div class="p-3 bg-light rounded-circle text-primary fs-1 mx-auto d-flex align-items-center justify-content-center" style="width: 75px; height: 75px;">
+            <div class="p-3 rounded-circle fs-1 mx-auto d-flex align-items-center justify-content-center" style="width: 75px; height: 75px; background: #fff1f7; color: #FF84BA; border: 1px solid #ffd4e5;">
               @switch(strtolower($device->type->jenis ?? ''))
                 @case('pc') <i class="bi bi-pc-display fs-2"></i> @break
                 @case('laptop') <i class="bi bi-laptop fs-2"></i> @break
@@ -39,7 +39,7 @@
             <span class="text-muted small">{{ $device->series }}</span>
           </div>
 
-          <table class="table table-striped table-bordered small mb-0">
+          <table class="table small mb-0">
             <tbody>
               <tr>
                 <th style="width: 130px;">Kode BMN</th>
@@ -87,14 +87,14 @@
     <!-- History Column -->
     <div class="col-lg-7 col-md-12">
       <div class="card shadow-sm border-0 mb-4 h-100">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #FF84BA, #99C2FF) !important; padding: 15px 20px !important; margin: -24px -24px 20px -24px !important; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom: none !important;">
           <h5 class="card-title my-0 text-white"><i class="bi bi-journal-text me-1"></i> Riwayat Kerusakan & Perbaikan</h5>
-          <a href="{{ route('dashboard') }}" class="btn btn-sm btn-outline-light"><i class="bi bi-arrow-left"></i> Kembali</a>
+          <a href="{{ route('dashboard') }}" class="btn btn-sm btn-light" style="color: #FF84BA !important; border: none !important; font-weight: 600;"><i class="bi bi-arrow-left"></i> Kembali</a>
         </div>
         <div class="card-body pt-3">
           
           @forelse($reports as $report)
-            <div class="border-bottom pb-4 mb-4">
+            <div class="pb-4 mb-4" style="border-bottom: 2px dashed #ffd4e5 !important;">
               <div class="d-flex justify-content-between align-items-start mb-2">
                 <div>
                   <span class="badge bg-{{ $report->status == 'menunggu' ? 'secondary' : ($report->status == 'diproses' ? 'primary' : ($report->status == 'selesai' ? 'success' : 'danger')) }} py-1 px-2 small">
@@ -106,31 +106,27 @@
               </div>
 
               <!-- Issue desc -->
-              <div class="bg-light p-3 rounded mb-3 border-start border-3 border-secondary small text-dark">
-                <span class="fw-bold d-block mb-1">Kendala yang Dilaporkan:</span>
+              <div class="p-3 rounded mb-3 border-start border-3 small text-dark" style="background: #fffdfd; border-color: #FF84BA !important; border-left-width: 4px !important; border-top: 1px solid #fdf5f9; border-right: 1px solid #fdf5f9; border-bottom: 1px solid #fdf5f9;">
+                <span class="fw-bold d-block mb-1" style="color: var(--text-primary);">Kendala yang Dilaporkan:</span>
                 <span style="white-space: pre-line;">{{ $report->description }}</span>
               </div>
 
               @if($report->status !== 'menunggu')
-                <div class="row g-2 small">
-                  <div class="col-sm-6">
-                    <div class="p-2 border rounded bg-white">
-                      <span class="text-muted d-block" style="font-size: 0.75rem;">Teknisi Penanggung Jawab</span>
-                      <strong class="text-dark">{{ $report->technician->name ?? 'N/A' }}</strong>
-                    </div>
-                  </div>
-                  @if($report->id_vendor)
+                <div class="p-3 border rounded bg-white small" style="border-left: 4px solid #FF84BA !important; border-color: var(--border-color) !important;">
+                  <div class="row g-2">
                     <div class="col-sm-6">
-                      <div class="p-2 border rounded bg-white">
-                        <span class="text-muted d-block" style="font-size: 0.75rem;">Vendor Rujukan</span>
-                        <strong class="text-dark">{{ $report->vendor->vendor_service ?? 'N/A' }}</strong>
-                      </div>
+                      <span class="text-muted d-block" style="font-size: 0.75rem;">Teknisi Penanggung Jawab</span>
+                      <strong class="text-dark" style="color: var(--text-primary) !important;">{{ $report->technician->name ?? 'N/A' }}</strong>
                     </div>
-                  @endif
-                  <div class="col-12 mt-2">
-                    <div class="p-2 border border-warning-subtle rounded bg-white" style="border-left: 3px solid var(--color-accent) !important;">
+                    @if($report->id_vendor)
+                      <div class="col-sm-6">
+                        <span class="text-muted d-block" style="font-size: 0.75rem;">Vendor Rujukan</span>
+                        <strong class="text-dark" style="color: var(--text-primary) !important;">{{ $report->vendor->vendor_service ?? 'N/A' }}</strong>
+                      </div>
+                    @endif
+                    <div class="col-12 mt-2 pt-2 border-top" style="border-top: 1px dashed var(--border-color) !important;">
                       <span class="text-muted d-block" style="font-size: 0.75rem;">Tindakan / Solusi Teknisi</span>
-                      <span class="text-dark fw-semibold" style="white-space: pre-line;">{{ $report->technician_notes ?: 'Belum ada catatan solusi.' }}</span>
+                      <span class="fw-semibold" style="white-space: pre-line; color: var(--text-primary) !important;">{{ $report->technician_notes ?: 'Belum ada catatan solusi.' }}</span>
                     </div>
                   </div>
                 </div>

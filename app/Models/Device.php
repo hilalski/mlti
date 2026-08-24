@@ -17,6 +17,11 @@ class Device extends Model
         return $this->belongsTo(User::class, 'id_user', 'nip_lama');
     }
 
+    public function room()
+    {
+        return $this->belongsTo(Room::class, 'id_user', 'id');
+    }
+
     public function type()
     {
         return $this->belongsTo(Type::class, 'id_type');

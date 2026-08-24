@@ -165,7 +165,7 @@
             <div class="modal-body">
               <div class="alert alert-warning small border-0 shadow-sm mb-3">
                 <i class="bi bi-exclamation-triangle me-1"></i> 
-                Mengganti perangkat akan otomatis **melepaskan** perangkat *{{ $device->brand }} - {{ $device->series }}* (BMN: {{ $device->id }}) kembali ke Gudang, dan menggantinya dengan perangkat baru yang Anda pilih di bawah.
+                Mengganti perangkat berarti melepaskan perangkat {{ $device->brand }} - {{ $device->series }} (BMN: {{ $device->id }}), dan menggantinya dengan perangkat yang dipilih.
               </div>
 
               <h6 class="fw-bold mb-2">Pilih Perangkat Pengganti (Tipe: {{ $device->type->jenis ?? 'Lainnya' }})</h6>
@@ -184,12 +184,12 @@
                   <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 swap-item" data-search-text="{{ strtolower($avail->brand) }} {{ strtolower($avail->series) }} {{ strtolower($avail->id) }}">
                     <div>
                       <div class="fw-bold text-dark">{{ $avail->brand }} - {{ $avail->series }}</div>
-                      <small class="text-muted">Kode BMN: {{ $avail->id }} | S/N: {{ $avail->serial_number ?: '-' }}</small>
-                      <div>
+                      <small class="text-muted">Kode BMN: {{ $avail->id }}
                         <span class="badge bg-{{ $avail->id_condition == 1 ? 'success' : ($avail->id_condition == 2 ? 'warning text-dark' : 'danger') }} py-1 small">
                           Kondisi: {{ $avail->condition->kondisi ?? 'N/A' }}
                         </span>
-                      </div>
+                      </small>
+                      
                     </div>
                     <form action="{{ route('dashboard.devices.swap') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengganti ke perangkat ini?');">
                       @csrf
@@ -226,6 +226,121 @@
       </div>
     </div>
 
+  </div>
+</section>
+
+<!-- Room Devices Title -->
+<div class="pagetitle d-flex justify-content-between align-items-center mb-3 mt-4">
+  <div>
+    <h1 class="fw-bold" style="color: var(--color-primary);"><i class="bi bi-house-door-fill me-1"></i> Perangkat {{ auth()->user()->room->ruang ?? 'Tidak Diketahui' }}</h1>
+  </div>
+</div>
+
+<section class="section dashboard">
+  <div class="row">
+    @forelse($roomDevices as $device)
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <div class="card h-100 card-device position-relative">
+          
+          <div class="card-body pt-4 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex align-items-start mb-3">
+                <div class="device-icon-wrapper p-3 bg-light rounded-3 me-3 text-secondary fs-2 d-flex align-items-center justify-content-center shadow-sm" style="width: 58px; height: 58px;">
+                  @switch(strtolower($device->type->jenis ?? ''))
+                    @case('pc')
+                      <i class="bi bi-pc-display text-primary"></i>
+                      @break
+                    @case('laptop')
+                      <i class="bi bi-laptop text-primary"></i>
+                      @break
+                    @case('printer')
+                      <i class="bi bi-printer text-success"></i>
+                      @break
+                    @case('ups')
+                      <i class="bi bi-lightning-charge-fill text-warning"></i>
+                      @break
+                    @case('scanner')
+                      <i class="bi bi-camera text-info"></i>
+                      @break
+                    @default
+                      <i class="bi bi-cpu-fill text-secondary"></i>
+                  @endswitch
+                </div>
+                <div class="flex-grow-1">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <span class="badge bg-light text-primary border border-primary-subtle small fw-bold px-2 py-1 mb-1">{{ $device->type->jenis ?? 'Lainnya' }}</span>
+                  </div>
+                  <h6 class="mb-0 text-dark fw-bold" style="font-size: 1.05rem; padding-right: 25px;">{{ $device->brand }} | <span class="text-muted small" style="font-size: 0.8rem;">{{ $device->series }}</span></h6>
+                </div>
+              </div>
+
+              <!-- Device Specifications Table -->
+              <div class="bg-light p-3 rounded-3 mb-3 border">
+                <table class="table table-sm table-borderless small mb-0">
+                  <tbody>
+                    <tr class="pb-1">
+                      <td class="text-muted p-0" style="width: 90px;">Kode BMN</td>
+                      <td class="p-0 text-dark fw-semibold">: {{ $device->id }}</td>
+                    </tr>
+                    <tr class="pb-1">
+                      <td class="text-muted p-0">No Seri</td>
+                      <td class="p-0 text-dark">: {{ $device->serial_number ?: '-' }}</td>
+                    </tr>
+                    <tr class="pb-1">
+                      <td class="text-muted p-0">Tahun</td>
+                      <td class="p-0 text-dark">: {{ $device->year ?: '-' }}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted p-0">Kondisi</td>
+                      <td class="p-0">
+                        : <span class="badge bg-{{ $device->id_condition == 1 ? 'success' : ($device->id_condition == 2 ? 'warning text-dark' : 'danger') }} px-2 py-1 small">
+                          {{ $device->condition->kondisi ?? 'Tidak Diketahui' }}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Card footer actions -->
+            <div class="pt-3 border-top d-flex flex-column gap-2">
+              <a href="{{ route('dashboard.devices.show', $device->id) }}" class="btn btn-light btn-sm w-100 py-2 fw-semibold text-dark border">
+                <i class="bi bi-info-circle me-1"></i> Detail & Riwayat Perbaikan
+              </a>
+
+              @php
+                $activeReport = $device->activeReport();
+              @endphp
+
+              @if($activeReport)
+                <div class="d-flex align-items-center justify-content-between pt-1">
+                  <span class="badge bg-warning-subtle text-warning border border-warning-subtle py-2 px-3 fw-bold rounded-pill">
+                    <span class="spinner-grow spinner-grow-sm me-1 text-warning" role="status" style="width: 10px; height: 10px;"></span>
+                    {{ ucfirst($activeReport->status) }}
+                  </span>
+                  <a href="{{ route('report.status', $device->id) }}" class="btn btn-primary btn-sm px-3 py-1.5 fw-semibold shadow-sm">
+                    <i class="bi bi-eye-fill me-1"></i> Monitor
+                  </a>
+                </div>
+              @else
+                <a href="{{ route('report.create', $device->id) }}" class="btn btn-outline-danger btn-sm w-100 py-2 fw-semibold">
+                  <i class="bi bi-exclamation-triangle-fill me-1"></i> Laporkan Kerusakan
+                </a>
+              @endif
+            </div>
+
+          </div>
+        </div>
+      </div>
+    @empty
+      <div class="col-12 mb-4">
+        <div class="card border-0 shadow-sm p-4 text-center text-muted bg-light">
+          <i class="bi bi-info-circle fs-3 mb-2 text-secondary"></i>
+          <p class="mb-0 small">Tidak ada perangkat lain di ruangan ini.</p>
+        </div>
+      </div>
+    @endforelse
   </div>
 </section>
 

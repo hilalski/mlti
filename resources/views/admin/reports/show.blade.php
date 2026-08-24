@@ -28,7 +28,7 @@
           <table class="table table-hover align-middle mb-0">
             <tr>
               <td class="fw-bold text-dark" style="width: 180px; border-bottom: 1px solid #f1f5f9;">Pelapor</td>
-              <td style="border-bottom: 1px solid #f1f5f9;">{{ $report->reporter->name ?? 'N/A' }} <span class="text-muted text-xs ms-2">(NIP: {{ $report->reported_by }})</span></td>
+              <td style="border-bottom: 1px solid #f1f5f9;">{{ $report->reporter->name ?? 'N/A' }}</td>
             </tr>
             <tr>
               <td class="fw-bold text-dark" style="border-bottom: 1px solid #f1f5f9;">Fungsi / Jabatan</td>
@@ -97,12 +97,12 @@
 
             <!-- Technician Assignment -->
             <div class="mb-3">
-              <label for="handled_by" class="form-label fw-bold text-dark">Petugas Jarkom / Teknisi</label>
+              <label for="handled_by" class="form-label fw-bold text-dark">Petugas Teknisi</label>
               <select name="handled_by" id="handled_by" class="form-select @error('handled_by') is-invalid @enderror">
                 <option value="">-- Pilih Teknisi (Ditugaskan) --</option>
                 @foreach($technicians as $tech)
                   <option value="{{ $tech->nip_lama }}" {{ old('handled_by', $report->handled_by) == $tech->nip_lama ? 'selected' : '' }}>
-                    {{ $tech->name }} (NIP: {{ $tech->nip_lama }})
+                    {{ $tech->name }}
                   </option>
                 @endforeach
               </select>

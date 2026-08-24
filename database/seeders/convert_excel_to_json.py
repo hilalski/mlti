@@ -7,6 +7,8 @@ json_dir = 'database/seeders/json'
 os.makedirs(json_dir, exist_ok=True)
 
 files = [
+    'team.xlsx',
+    'room.xlsx',
     'user.xlsx',
     'device.xlsx',
     'type.xlsx',

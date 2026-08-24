@@ -72,7 +72,6 @@
                   <tr>
                     <td>
                       <div class="fw-bold text-dark small">{{ $report->reporter->name ?? 'N/A' }}</div>
-                      <small class="text-muted" style="font-size: 0.75rem;">NIP: {{ $report->reported_by }}</small>
                     </td>
                     <td>
                       <div class="small fw-bold text-dark">{{ $report->device->brand ?? 'N/A' }}</div>

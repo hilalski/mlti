@@ -22,5 +22,7 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Support\Facades\Blade::directive('title', function ($expression) {
             return "<?php \$__env->startSection('title', $expression); ?>";
         });
+
+        \Illuminate\Pagination\Paginator::useBootstrapFive();
     }
 }

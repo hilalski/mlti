@@ -119,11 +119,12 @@ a:hover {
 }
 
 .sidebar-nav .nav-link {
-    color: var(--text-secondary) !important;
+    color: var(--text-secondary) !important; /* Inactive is gray-plum */
     background-color: transparent !important;
     border-radius: 8px !important;
     padding: 10px 16px !important;
     font-weight: 500 !important;
+    border-left: 4px solid transparent !important;
     transition: all 0.2s ease !important;
 }
 
@@ -131,17 +132,44 @@ a:hover {
     color: var(--text-secondary) !important;
     margin-right: 12px !important;
     font-size: 1.1rem !important;
+    transition: all 0.2s ease !important;
 }
 
+/* Hover and Active State for Main Links and Open Dropdowns */
 .sidebar-nav .nav-link:hover,
-.sidebar-nav .nav-link:not(.collapsed) {
+.sidebar-nav .nav-link.active,
+.sidebar-nav .nav-link:not(.collapsed)[data-bs-toggle="collapse"] {
     color: #FF84BA !important;
     background: linear-gradient(135deg, rgba(255, 132, 186, 0.08), rgba(153, 194, 255, 0.08)) !important;
     border-left: 4px solid #FF84BA !important;
 }
 
 .sidebar-nav .nav-link:hover i,
-.sidebar-nav .nav-link:not(.collapsed) i {
+.sidebar-nav .nav-link.active i,
+.sidebar-nav .nav-link:not(.collapsed)[data-bs-toggle="collapse"] i {
+    color: #FF84BA !important;
+}
+
+/* Sidebar Sub-menu Links (nav-content) */
+.sidebar-nav .nav-content a {
+    color: var(--text-secondary) !important; /* Inactive sub-menu is gray-plum */
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+.sidebar-nav .nav-content a i {
+    color: var(--text-secondary) !important;
+}
+
+/* Hover and Active State for Sub-menu Links */
+.sidebar-nav .nav-content a:hover,
+.sidebar-nav .nav-content a.active {
+    color: #FF84BA !important;
+    background-color: transparent !important;
+}
+
+.sidebar-nav .nav-content a.active i {
+    background-color: #FF84BA !important;
     color: #FF84BA !important;
 }
 

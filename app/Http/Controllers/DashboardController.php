@@ -19,15 +19,23 @@ class DashboardController extends Controller
             ->with(['type', 'condition'])
             ->get();
 
-        // Fetch available devices (where id_user < 100 or null)
+        // Fetch devices belonging to this user's room
+        $roomDevices = collect();
+        if ($user->id_ruang) {
+            $roomDevices = Device::where('id_user', $user->id_ruang)
+                ->with(['type', 'condition'])
+                ->get();
+        }
+
+        // Fetch available devices (where id_user is Gudang (15), Unknown (99), or null)
         $availableDevices = Device::where(function($q) {
-            $q->where('id_user', '<', 100)
+            $q->whereIn('id_user', [15, 99])
               ->orWhereNull('id_user');
         })->with(['type', 'condition'])->get();
 
         $types = Type::all();
 
-        return view('dashboard', compact('devices', 'availableDevices', 'types'));
+        return view('dashboard', compact('devices', 'roomDevices', 'availableDevices', 'types'));
     }
 
     public function manage(Request $request)
