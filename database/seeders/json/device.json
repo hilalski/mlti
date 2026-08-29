@@ -1973,7 +1973,7 @@
         "id_status_bmn": 1,
         "id_condition": 1,
         "keterangan": "Konsultasi Statistik",
-        "id_user": 6
+        "id_user": 9
     },
     {
         "id": "3100102001-240",
@@ -6641,5 +6641,18 @@
         "id_condition": 1,
         "keterangan": "-",
         "id_user": 340014249
+    },
+    {
+        "id": "3060201004-1",
+        "id_type": 8,
+        "year": 2025,
+        "id_source": 2,
+        "brand": "Realme",
+        "series": "Realme Note 50",
+        "serial_number": "-",
+        "id_status_bmn": 1,
+        "id_condition": 1,
+        "keterangan": "-",
+        "id_user": 9
     }
 ]

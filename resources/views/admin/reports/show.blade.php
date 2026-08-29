@@ -39,7 +39,7 @@
               <td style="border-bottom: 1px solid #f1f5f9;">
                 @if($report->device)
                   <span class="fw-bold">{{ $report->device->brand ?? 'Perangkat' }} - {{ $report->device->series ?? '' }}</span>
-                  <span class="text-muted ms-2" style="font-size: 0.8rem;">(BMN: {{ $report->device_id }})</span>
+                  <br><span class="text-muted ms-2" style="font-size: 0.8rem;">(BMN: {{ $report->device_id }})</span>
                 @else
                   <span class="fw-bold text-primary"><i class="bi bi-wifi me-1"></i> Jaringan {{ $report->room->ruang ?? 'Ruangan' }}</span>
                   <span class="badge bg-light text-primary border border-primary-subtle ms-2 small">Seluruh Ruangan</span>
@@ -82,7 +82,7 @@
         
         <div class="card-body pt-3">
           
-          <form action="{{ route('admin.reports.update', $report->id) }}" method="POST">
+          <form action="{{ route('admin.reports.update', $report->ticket_id) }}" method="POST">
             @csrf
             @method('PATCH')
 
@@ -132,7 +132,7 @@
 
             <!-- Technician Notes -->
             <div class="mb-4">
-              <label for="technician_notes" class="form-label fw-bold text-dark">Catatan Tindakan / Solusi Teknisi</label>
+              <label for="technician_notes" class="form-label fw-bold text-dark">Catatan Teknisi</label>
               <textarea name="technician_notes" id="technician_notes" rows="6" class="form-control @error('technician_notes') is-invalid @enderror" placeholder="Tuliskan tindakan yang diambil, komponen yang diganti, atau alasan laporan ditolak/ditunda...">{{ old('technician_notes', $report->technician_notes) }}</textarea>
               @error('technician_notes')
                 <div class="invalid-feedback">{{ $message }}</div>

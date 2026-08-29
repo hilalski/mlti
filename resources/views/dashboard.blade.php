@@ -14,6 +14,9 @@
     </nav>
   </div>
   <div class="d-flex gap-2">
+    <button type="button" class="btn btn-outline-primary btn-sm px-3 py-2 fw-semibold shadow-sm" data-bs-toggle="modal" data-bs-target="#quickScanModal">
+      <i class="bi bi-qr-code-scan me-1"></i> Pindai BMN
+    </button>
     <button type="button" class="btn btn-primary btn-sm px-3 py-2 fw-semibold shadow-sm" data-bs-toggle="modal" data-bs-target="#openTicketModal">
       <i class="bi bi-ticket-detailed-fill me-1"></i> Open Ticket
     </button>
@@ -311,7 +314,11 @@
       {{-- ── Tab Content ── --}}
       <div class="tab-content p-4" id="roomTypeTabsContent">
         @foreach($roomTypeKeys as $idx => $typeName)
-          @php $tabId = 'roomtab-' . Str::slug($typeName); @endphp
+          @php
+            $tabId = 'roomtab-' . Str::slug($typeName);
+            $roomTypeDevices = $roomByType[$typeName];
+            $roomTypeId = $roomTypeDevices->first()->id_type;
+          @endphp
           <div
             class="tab-pane fade {{ $idx === 0 ? 'show active' : '' }}"
             id="{{ $tabId }}-pane"
@@ -319,7 +326,7 @@
             aria-labelledby="{{ $tabId }}-btn"
           >
             <div class="row">
-              @foreach($roomByType[$typeName] as $device)
+              @foreach($roomTypeDevices as $device)
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                   <div class="card h-100 card-device position-relative" style="border-radius: 16px !important;">
 
@@ -421,6 +428,18 @@
                   </div>
                 </div>
               @endforeach
+
+              <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <button type="button" class="card h-100 w-100 card-device border-dashed d-flex align-items-center justify-content-center bg-light text-decoration-none"
+                        style="border: 2px dashed var(--color-secondary) !important; min-height: 250px; cursor: pointer; transition: all 0.3s;"
+                        data-bs-toggle="modal" data-bs-target="#addRoomDeviceModal">
+                  <span class="card-body text-center d-flex flex-column align-items-center justify-content-center py-5">
+                    <i class="bi bi-plus-circle-fill text-primary fs-1 mb-2"></i>
+                    <span class="h5 fw-bold text-dark mb-1">Tambah Perangkat</span>
+                    <span class="text-muted small">Tambahkan perangkat ke ruangan ini</span>
+                  </span>
+                </button>
+              </div>
             </div>{{-- /row --}}
           </div>{{-- /tab-pane --}}
         @endforeach
@@ -438,6 +457,130 @@
   </form>
 @endforeach
 
+
+{{-- Add device modals: one per room-device type tab --}}
+@if(false) {{-- Replaced by the unified type-tab modal below. --}}
+  @foreach($roomTypeKeys as $typeName)
+    @php
+      $roomTypeDevices = $roomByType[$typeName];
+      $roomTypeId = $roomTypeDevices->first()->id_type;
+      $roomTypeAvailable = $availableDevices
+        ->where('id_type', $roomTypeId)
+        ->reject(fn($device) => (string) $device->id_user === (string) auth()->user()->id_ruang);
+    @endphp
+    <div class="modal fade" id="addRoomDeviceModal-{{ $roomTypeId }}" tabindex="-1" aria-labelledby="addRoomDeviceModalLabel-{{ $roomTypeId }}" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title fw-bold" id="addRoomDeviceModalLabel-{{ $roomTypeId }}"><i class="bi bi-plus-circle-fill me-1"></i> Tambah Perangkat {{ $typeName }} ke Ruangan</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted small">Pilih perangkat {{ $typeName }} yang akan ditambahkan ke ruangan {{ auth()->user()->room->ruang ?? '' }}.</p>
+            <div class="mb-3">
+              <input type="search" class="form-control room-add-device-search" placeholder="Cari nama, merek, BMN, atau pemilik perangkat..." autocomplete="off">
+            </div>
+            <div class="list-group shadow-sm room-add-device-list" style="max-height: 350px; overflow-y: auto;">
+              @forelse($roomTypeAvailable as $avail)
+                <div class="list-group-item d-flex justify-content-between align-items-center py-3 gap-3 room-add-device-item"
+                     data-search-text="{{ strtolower($avail->brand . ' ' . $avail->series . ' ' . $avail->id . ' ' . ($avail->user?->name ?? '') . ' ' . ($avail->room?->ruang ?? '') . ' gudang') }}">
+                  <div>
+                    <div class="fw-bold text-dark">{{ $avail->brand }} - {{ $avail->series }}</div>
+                    <small class="text-muted d-block">Kode BMN: {{ $avail->id }} | S/N: {{ $avail->serial_number ?: '-' }}</small>
+                    <span class="badge bg-{{ $avail->id_condition == 1 ? 'success' : ($avail->id_condition == 2 ? 'warning text-dark' : 'danger') }} py-1 small mt-1">Kondisi: {{ $avail->condition->kondisi ?? 'N/A' }}</span>
+                    <div class="mt-2 small">
+                      <span class="text-muted" style="font-size: 0.8rem;">Pemilik saat ini:</span>
+                      @if($avail->user)
+                        <span class="fw-semibold" style="font-size: 0.8rem; color: #FF84BA;"><i class="bi bi-person-fill"></i> {{ $avail->user->name }}</span>
+                      @elseif($avail->room)
+                        <span class="fw-semibold" style="font-size: 0.8rem; color: #99C2FF;"><i class="bi bi-house-door-fill"></i> {{ $avail->room->ruang }}</span>
+                      @else
+                        <span class="fw-semibold" style="font-size: 0.8rem;"><i class="bi bi-box-seam-fill"></i> Gudang</span>
+                      @endif
+                    </div>
+                  </div>
+                  <form action="{{ route('dashboard.devices.assign-to-room') }}" method="POST" onsubmit="return confirm('Tambahkan perangkat ini ke ruangan?');">
+                    @csrf
+                    <input type="hidden" name="device_id" value="{{ $avail->id }}">
+                    <button type="submit" class="btn btn-sm btn-primary text-white fw-bold text-nowrap"><i class="bi bi-plus-circle me-1"></i> Tambahkan</button>
+                  </form>
+                </div>
+              @empty
+                <div class="list-group-item text-center py-4 text-muted">Tidak ada perangkat {{ $typeName }} yang tersedia.</div>
+              @endforelse
+            </div>
+          </div>
+          <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button></div>
+        </div>
+      </div>
+    </div>
+  @endforeach
+@endif
+
+<!-- Global Add Device Modal -->
+{{-- Unified Add Device to Room Modal --}}
+@php
+  $roomDeviceAvailable = $availableDevices
+    ->reject(fn($device) => (string) $device->id_user === (string) auth()->user()->id_ruang);
+@endphp
+<div class="modal fade" id="addRoomDeviceModal" tabindex="-1" aria-labelledby="addRoomDeviceModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title fw-bold" id="addRoomDeviceModalLabel"><i class="bi bi-plus-circle-fill me-1"></i> Tambah Perangkat ke Ruangan</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <input type="search" id="roomAddDeviceSearchInput" class="form-control ps-3" placeholder="Cari perangkat berdasarkan nama, merek, BMN, atau pemilik..." autocomplete="off">
+        </div>
+
+        <ul class="nav nav-pills mb-3 justify-content-center gap-2" id="roomAddTypeTabs" role="tablist">
+          @foreach($types as $idx => $type)
+            <li class="nav-item" role="presentation">
+              <button class="nav-link {{ $idx === 0 ? 'active' : '' }} fw-semibold" id="room-add-tab-btn-{{ $type->id }}" data-bs-toggle="tab" data-bs-target="#room-add-tab-content-{{ $type->id }}" type="button" role="tab">
+                {{ $type->jenis }}
+              </button>
+            </li>
+          @endforeach
+        </ul>
+
+        <div class="tab-content" id="roomAddTypeTabsContent">
+          @foreach($types as $idx => $type)
+            @php $typeAvails = $roomDeviceAvailable->where('id_type', $type->id); @endphp
+            <div class="tab-pane fade {{ $idx === 0 ? 'show active' : '' }}" id="room-add-tab-content-{{ $type->id }}" role="tabpanel">
+              <div class="list-group shadow-sm room-add-tab-list" style="max-height: 350px; overflow-y: auto;">
+                @forelse($typeAvails as $avail)
+                  @php
+                    $ownerName = $avail->user?->name ?? $avail->room?->ruang ?? 'Gudang';
+                    $ownerIcon = $avail->user ? 'bi-person-fill' : ($avail->room ? 'bi-house-door-fill' : 'bi-box-seam-fill');
+                  @endphp
+                  <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 gap-3 room-add-tab-item"
+                       data-search-text="{{ strtolower($avail->brand . ' ' . $avail->series . ' ' . $avail->id . ' ' . $ownerName) }}">
+                    <div>
+                      <div class="fw-bold text-dark">{{ $avail->brand }} - {{ $avail->series }}</div>
+                      <small class="text-muted d-block">Kode BMN: {{ $avail->id }} | S/N: {{ $avail->serial_number ?: '-' }}</small>
+                      <span class="badge bg-{{ $avail->id_condition == 1 ? 'success' : ($avail->id_condition == 2 ? 'warning text-dark' : 'danger') }} py-1 small mt-1">Kondisi: {{ $avail->condition->kondisi ?? 'N/A' }}</span>
+                      <div class="mt-1 small"><span class="text-muted">Pemilik saat ini:</span> <span class="fw-semibold" style="font-size: .8rem;"><i class="bi {{ $ownerIcon }} me-1"></i>{{ $ownerName }}</span></div>
+                    </div>
+                    <form action="{{ route('dashboard.devices.assign-to-room') }}" method="POST" onsubmit="return confirm('Tambahkan perangkat ini ke ruangan?');">
+                      @csrf
+                      <input type="hidden" name="device_id" value="{{ $avail->id }}">
+                      <button type="submit" class="btn btn-sm btn-primary text-white fw-bold text-nowrap"><i class="bi bi-plus-circle me-1"></i> Tambahkan</button>
+                    </form>
+                  </div>
+                @empty
+                  <div class="list-group-item text-center py-4 text-muted empty-db-msg">Tidak ada perangkat {{ $type->jenis }} yang tersedia.</div>
+                @endforelse
+              </div>
+            </div>
+          @endforeach
+        </div>
+      </div>
+      <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button></div>
+    </div>
+  </div>
+</div>
 
 <!-- Global Add Device Modal -->
 <div class="modal fade" id="addDeviceModal" tabindex="-1" aria-labelledby="addDeviceModalLabel" aria-hidden="true">
@@ -521,6 +664,31 @@
   </div>
 </div>
 
+<!-- Quick Device QR Scan Modal -->
+<div class="modal fade" id="quickScanModal" tabindex="-1" aria-labelledby="quickScanModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content overflow-hidden" style="border-radius: 18px;">
+      <div class="modal-header bg-primary text-white" style="background: linear-gradient(135deg, #FF84BA 0%, #99C2FF 100%) !important;">
+        <h5 class="modal-title fw-bold" id="quickScanModalLabel"><i class="bi bi-qr-code-scan me-2"></i>Pindai QR BMN</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body p-3">
+        <p class="small text-muted mb-3">Arahkan kamera ke QR BMN perangkat.</p>
+        <div class="rounded-3 overflow-hidden bg-dark">
+          <video id="quick-scan-video" class="w-100 d-block" autoplay muted playsinline style="min-height: 250px; object-fit: cover;"></video>
+        </div>
+        <div id="quick-scan-message" class="alert d-none small mb-0 mt-3 py-2" role="alert"></div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+        <button type="button" id="quick-scan-toggle" class="btn btn-primary btn-sm">
+          <i class="bi bi-camera me-1"></i> Mulai Kamera
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Global Open Ticket Modal -->
 <div class="modal fade" id="openTicketModal" tabindex="-1" aria-labelledby="openTicketModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-sm-down">
@@ -548,7 +716,7 @@
             <select class="form-select" id="modal_room_selector" name="room_id" required>
               <option value="" disabled selected>-- Pilih Ruangan / Lokasi --</option>
               @foreach($allRooms as $room)
-                @php $dCount = $room->devices->count(); @endphp
+                @php $dCount = $room->ticket_devices->count(); @endphp
                 <option value="{{ $room->id }}" data-room-name="{{ $room->ruang }}">
                   {{ $room->ruang }}
                 </option>
@@ -644,6 +812,115 @@
 @endsection
 
 @section('scripts')
+<script src="https://unpkg.com/qr-scanner@1.4.2/qr-scanner.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modalElement = document.getElementById('quickScanModal');
+    const video = document.getElementById('quick-scan-video');
+    const toggleButton = document.getElementById('quick-scan-toggle');
+    const message = document.getElementById('quick-scan-message');
+    let scanner = null;
+    let isScanning = false;
+    let isProcessing = false;
+
+    function setButton(state) {
+        const busy = state === 'busy';
+        toggleButton.disabled = busy;
+        toggleButton.innerHTML = busy
+            ? '<span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span> Memproses...'
+            : state === 'scanning'
+                ? '<i class="bi bi-stop-circle me-1"></i> Stop Kamera'
+                : '<i class="bi bi-camera me-1"></i> Mulai Kamera';
+    }
+
+    function showMessage(type, text) {
+        message.className = `alert alert-${type} small mb-0 mt-3 py-2`;
+        message.textContent = text;
+    }
+
+    function hideMessage() {
+        message.className = 'alert d-none small mb-0 mt-3 py-2';
+        message.textContent = '';
+    }
+
+    async function stopScanner(keepButtonBusy = false) {
+        if (scanner && isScanning) await scanner.stop();
+        isScanning = false;
+        if (!keepButtonBusy) setButton('idle');
+    }
+
+    async function handleScanResult(result) {
+        if (isProcessing) return;
+        isProcessing = true;
+        setButton('busy');
+        showMessage('info', 'QR terbaca. Mencari perangkat...');
+
+        try {
+            await stopScanner(true);
+            const response = await fetch("{{ route('dashboard.quick-scan') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                },
+                body: JSON.stringify({ qr_string: result.data }),
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Perangkat tidak ditemukan.');
+
+            window.location.assign(data.redirect);
+        } catch (error) {
+            showMessage('danger', error.message || 'QR tidak dapat diproses.');
+            isProcessing = false;
+            setButton('idle');
+        }
+    }
+
+    async function startScanner() {
+        if (isScanning) return stopScanner();
+        if (typeof QrScanner === 'undefined') {
+            showMessage('danger', 'Pemindai QR tidak tersedia. Muat ulang halaman lalu coba lagi.');
+            return;
+        }
+
+        isProcessing = false;
+        setButton('busy');
+        showMessage('info', 'Meminta izin akses kamera...');
+
+        try {
+            if (!scanner) {
+                scanner = new QrScanner(video, handleScanResult, {
+                    preferredCamera: 'environment',
+                    maxScansPerSecond: 25,
+                    highlightScanRegion: false,
+                    highlightCodeOutline: false,
+                    returnDetailedScanResult: true,
+                });
+            }
+            // Dipanggil langsung dari klik tombol agar browser menampilkan prompt izin kamera.
+            await scanner.start();
+            isScanning = true;
+            hideMessage();
+            setButton('scanning');
+        } catch (error) {
+            isScanning = false;
+            const denied = ['NotAllowedError', 'SecurityError', 'PermissionDeniedError'].includes(error && error.name);
+            showMessage('danger', denied
+                ? 'Kamera tidak dapat diakses. Periksa izin kamera Anda.'
+                : 'Kamera gagal dinyalakan. Coba lagi.');
+            setButton('idle');
+        }
+    }
+
+    toggleButton.addEventListener('click', startScanner);
+    modalElement.addEventListener('hidden.bs.modal', async function() {
+        isProcessing = false;
+        await stopScanner();
+        hideMessage();
+    });
+});
+</script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // 1. Search in Swap Modal
@@ -717,6 +994,63 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // 3. Search in unified Add Device to Room modal, across every type tab.
+    const roomAddSearchInput = document.getElementById('roomAddDeviceSearchInput');
+    if (roomAddSearchInput) {
+        roomAddSearchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+            document.querySelectorAll('#addRoomDeviceModal .tab-pane').forEach(pane => {
+                const items = pane.querySelectorAll('.room-add-tab-item');
+                const list = pane.querySelector('.room-add-tab-list');
+                let visibleCount = 0;
+
+                items.forEach(item => {
+                    const isVisible = (item.getAttribute('data-search-text') || '').includes(query);
+                    item.style.setProperty('display', isVisible ? 'flex' : 'none', 'important');
+                    if (isVisible) visibleCount++;
+                });
+
+                let emptyMessage = list.querySelector('.no-room-tab-results-msg');
+                if (items.length && visibleCount === 0 && !emptyMessage) {
+                    emptyMessage = document.createElement('div');
+                    emptyMessage.className = 'list-group-item text-center py-4 text-muted no-room-tab-results-msg';
+                    emptyMessage.innerText = 'Tidak ada perangkat yang cocok dengan pencarian.';
+                    list.appendChild(emptyMessage);
+                } else if (visibleCount > 0 && emptyMessage) {
+                    emptyMessage.remove();
+                }
+            });
+        });
+    }
+
+    // Legacy per-tab modal search (kept for backwards-compatible markup).
+    document.querySelectorAll('.room-add-device-search').forEach(input => {
+        input.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+            const modal = this.closest('.modal');
+            const list = modal.querySelector('.room-add-device-list');
+            const items = list.querySelectorAll('.room-add-device-item');
+            let visibleCount = 0;
+
+            items.forEach(item => {
+                const text = item.getAttribute('data-search-text') || '';
+                const isVisible = text.includes(query);
+                item.style.setProperty('display', isVisible ? 'flex' : 'none', 'important');
+                if (isVisible) visibleCount++;
+            });
+
+            let emptyMessage = list.querySelector('.no-room-add-results-msg');
+            if (items.length && visibleCount === 0 && !emptyMessage) {
+                emptyMessage = document.createElement('div');
+                emptyMessage.className = 'list-group-item text-center py-4 text-muted no-room-add-results-msg';
+                emptyMessage.innerText = 'Tidak ada perangkat yang cocok dengan pencarian.';
+                list.appendChild(emptyMessage);
+            } else if (visibleCount > 0 && emptyMessage) {
+                emptyMessage.remove();
+            }
+        });
+    });
 });
 
 // ── Move-to-Gudang custom confirm dialog ──────────────────────────────────
@@ -862,7 +1196,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            const devices = room.devices || [];
+            const devices = room.ticket_devices || [];
             mSelectedRoomTitle.innerText = room.ruang;
             mDeviceSection.style.display = 'block';
 
@@ -882,6 +1216,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const typeName = dev.type ? dev.type.jenis : 'Lainnya';
                 const condName = dev.condition ? dev.condition.kondisi : 'N/A';
                 const condClass = dev.id_condition == 1 ? 'success' : (dev.id_condition == 2 ? 'warning text-dark' : 'danger');
+                const ownerName = dev.user ? dev.user.name : (dev.room ? dev.room.ruang : 'Gudang');
+                const ownerIcon = dev.user ? 'bi-person-fill' : (dev.room ? 'bi-house-door-fill' : 'bi-box-seam-fill');
 
                 let iconHtml = '<i class="bi bi-cpu-fill text-secondary"></i>';
                 const lowerType = typeName.toLowerCase();
@@ -898,7 +1234,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 item.className = 'p-2 mb-2 rounded border bg-white cursor-pointer modal-device-item d-flex justify-content-between align-items-center';
                 item.style.cursor = 'pointer';
                 item.setAttribute('data-device-id', dev.id);
-                item.setAttribute('data-search', `${dev.brand || ''} ${dev.series || ''} ${dev.id || ''} ${typeName}`.toLowerCase());
+                item.setAttribute('data-search', `${dev.brand || ''} ${dev.series || ''} ${dev.id || ''} ${typeName} ${ownerName}`.toLowerCase());
 
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
@@ -908,6 +1244,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div>
                             <div class="fw-bold text-dark small">${dev.brand || 'Perangkat'} - ${dev.series || ''}</div>
                             <small class="text-muted" style="font-size: 0.75rem;">BMN: ${dev.id} | <span class="badge bg-${condClass} py-0 px-1" style="font-size:0.65rem;">${condName}</span></small>
+                            <small class="text-muted d-block" style="font-size: 0.72rem;"><i class="bi ${ownerIcon} me-1"></i>Pemilik: ${ownerName}</small>
                         </div>
                     </div>
                     <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2 select-modal-btn" style="font-size: 0.75rem;">
@@ -978,4 +1315,3 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
 @endsection
-

@@ -71,6 +71,7 @@
                   <tr>
                     {{-- Reporter + Device (always visible, stacked) --}}
                     <td style="max-width: 200px;">
+                      <small class="text-primary fw-bold d-block" style="font-size: 0.7rem;">{{ $report->ticket_id }}</small>
                       <div class="fw-semibold text-dark" style="font-size: 0.82rem;">{{ $report->reporter->name ?? 'N/A' }}</div>
                       @if($report->device)
                         <div class="fw-bold text-dark" style="font-size: 0.8rem; line-height: 1.2;">{{ $report->device->brand ?? '' }} {{ $report->device->series ?? '' }}</div>
@@ -110,7 +111,7 @@
 
                     {{-- Action --}}
                     <td class="text-center text-nowrap">
-                      <a href="{{ route('admin.reports.show', $report->id) }}" class="btn btn-sm btn-primary py-1 px-2">
+                      <a href="{{ route('admin.reports.show', $report->ticket_id) }}" class="btn btn-sm btn-primary py-1 px-2">
                         <i class="bi bi-pencil-square"></i><span class="d-none d-sm-inline ms-1">Tangani</span>
                       </a>
                     </td>

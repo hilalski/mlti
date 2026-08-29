@@ -15,9 +15,20 @@ class ReportController extends Controller
 {
     public function openTicket(Request $request)
     {
-        $rooms = Room::with(['devices' => function($q) {
-            $q->with(['type', 'condition']);
-        }])->get();
+        $rooms = Room::with([
+            'devices' => fn ($query) => $query->with(['type', 'condition', 'user', 'room']),
+            'users.devices' => fn ($query) => $query->with(['type', 'condition', 'user', 'room']),
+        ])->get();
+
+        $rooms->each(function (Room $room): void {
+            $room->setAttribute(
+                'ticket_devices',
+                $room->devices
+                    ->merge($room->users->flatMap->devices)
+                    ->unique('id')
+                    ->values()
+            );
+        });
 
         $selectedRoomId = $request->query('room_id');
         $selectedDeviceId = $request->query('device_id');
@@ -106,11 +117,13 @@ class ReportController extends Controller
         return view('reports.history', compact('reports'));
     }
 
-    public function showReport($id)
+    public function showReport($ticketId)
     {
         $user = Auth::user();
         
-        $report = Report::where('id', $id)
+        $report = Report::where(function ($query) use ($ticketId) {
+                $query->where('ticket_id', $ticketId)->orWhere('id', $ticketId);
+            })
             ->where('reported_by', $user->nip_lama)
             ->with(['device.type', 'device.condition', 'reporter', 'technician', 'vendor'])
             ->firstOrFail();

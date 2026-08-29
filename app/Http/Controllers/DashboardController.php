@@ -36,12 +36,55 @@ class DashboardController extends Controller
 
         $types = Type::all();
 
-        // All rooms with their devices for Open Ticket feature
-        $allRooms = Room::with(['devices' => function($q) {
-            $q->with(['type', 'condition']);
-        }])->get();
+        // Open Ticket includes devices owned directly by the room and by its users.
+        $allRooms = Room::with([
+            'devices' => fn ($query) => $query->with(['type', 'condition', 'user', 'room']),
+            'users.devices' => fn ($query) => $query->with(['type', 'condition', 'user', 'room']),
+        ])->get();
+
+        $allRooms->each(function (Room $room): void {
+            $room->setAttribute(
+                'ticket_devices',
+                $room->devices
+                    ->merge($room->users->flatMap->devices)
+                    ->unique('id')
+                    ->values()
+            );
+        });
 
         return view('dashboard', compact('devices', 'roomDevices', 'availableDevices', 'types', 'allRooms'));
+    }
+
+    /**
+     * Parse the BMN QR payload and return the report form URL for the matched device.
+     */
+    public function quickScan(Request $request)
+    {
+        $request->validate([
+            'qr_string' => ['required', 'string'],
+        ]);
+
+        $parts = array_map('trim', explode('*', $request->input('qr_string')));
+        if (count($parts) < 4 || $parts[2] === '' || $parts[3] === '') {
+            return response()->json([
+                'message' => 'Format QR perangkat tidak dikenali.',
+            ], 422);
+        }
+
+        $deviceId = $parts[2] . '-' . $parts[3];
+        $device = Device::find($deviceId);
+
+        if (!$device) {
+            return response()->json([
+                'message' => "Perangkat dengan kode BMN {$deviceId} tidak ditemukan.",
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'device_id' => $device->id,
+            'redirect' => route('report.create', $device->id),
+        ]);
     }
 
     public function manage(Request $request)
@@ -109,6 +152,27 @@ class DashboardController extends Controller
         $device->update(['id_user' => $user->nip_lama]);
 
         return back()->with('success', 'Perangkat ruangan berhasil Anda kuasai secara pribadi.');
+    }
+
+    /** Assign an available device to the authenticated user's room. */
+    public function assignToRoom(Request $request)
+    {
+        $request->validate([
+            'device_id' => 'required|exists:devices,id',
+        ]);
+
+        $user = Auth::user();
+        if (!$user->id_ruang) {
+            return back()->with('error', 'Akun Anda belum terhubung ke ruangan.');
+        }
+
+        $device = Device::findOrFail($request->device_id);
+        if ((string) $device->id_user === (string) $user->id_ruang) {
+            return back()->with('error', 'Perangkat tersebut sudah terdaftar di ruangan Anda.');
+        }
+        $device->update(['id_user' => $user->id_ruang]);
+
+        return back()->with('success', 'Perangkat berhasil ditambahkan ke perangkat ruangan.');
     }
 
     public function unassign(Request $request)

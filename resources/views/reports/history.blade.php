@@ -57,6 +57,7 @@
                   <tr>
                     {{-- Device / Location --}}
                     <td style="max-width: 200px;">
+                      <small class="text-primary fw-bold d-block" style="font-size: 0.7rem;">{{ $report->ticket_id }}</small>
                       @if($report->device)
                         <div class="fw-bold text-dark" style="font-size: 0.875rem; line-height: 1.3;">
                           {{ $report->device->brand ?? 'Perangkat' }} {{ $report->device->series ?? '' }}
@@ -97,7 +98,7 @@
 
                     {{-- Action --}}
                     <td class="text-center text-nowrap">
-                      <a href="{{ route('reports.history.show', $report->id) }}" class="btn btn-sm btn-primary py-1 px-2 fw-semibold">
+                      <a href="{{ route('reports.history.show', $report->ticket_id) }}" class="btn btn-sm btn-primary py-1 px-2 fw-semibold">
                         <i class="bi bi-eye-fill"></i><span class="d-none d-sm-inline ms-1">Detail</span>
                       </a>
                     </td>

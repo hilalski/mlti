@@ -1,6 +1,7 @@
 import openpyxl
 import json
 import os
+import tempfile
 
 excel_dir = 'database/seeders/excel'
 json_dir = 'database/seeders/json'
@@ -20,26 +21,43 @@ files = [
 ]
 
 for fname in files:
-    wb = openpyxl.load_workbook(os.path.join(excel_dir, fname))
-    ws = wb.active
-    rows = list(ws.iter_rows(values_only=True))
-    if not rows:
+    excel_path = os.path.join(excel_dir, fname)
+    if not os.path.exists(excel_path):
+        print(f"Skipped {fname}: file not found")
         continue
-    
-    headers = [str(h).strip() for h in rows[0]]
+
+    # data_only reads the latest calculated value of formula cells and read_only
+    # keeps conversion reliable even when the workbook grows larger.
+    wb = openpyxl.load_workbook(excel_path, data_only=True, read_only=True)
+    ws = wb.active
+    rows = ws.iter_rows(values_only=True)
+    headers_row = next(rows, None)
+    if not headers_row:
+        continue
+
+    headers = [str(h).strip() if h is not None else '' for h in headers_row]
     data = []
-    for r in rows[1:]:
+    for r in rows:
         if all(cell is None for cell in r):
             continue
         row_dict = {}
         for h, val in zip(headers, r):
+            if not h:
+                continue
             # Clean string values
             if isinstance(val, str):
                 val = val.strip()
             row_dict[h] = val
-        data.append(row_dict)
+        if row_dict:
+            data.append(row_dict)
         
     out_name = fname.replace('.xlsx', '.json')
-    with open(os.path.join(json_dir, out_name), 'w', encoding='utf-8') as f:
+    output_path = os.path.join(json_dir, out_name)
+    # Write to a temporary file first so an interrupted conversion never leaves
+    # the seeder with a partial JSON file.
+    fd, temp_path = tempfile.mkstemp(dir=json_dir, suffix='.json')
+    with os.fdopen(fd, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
+    os.replace(temp_path, output_path)
+    wb.close()
     print(f"Converted {fname} to {out_name} (rows: {len(data)})")

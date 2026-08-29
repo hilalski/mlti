@@ -98,16 +98,13 @@
               <table class="table table-hover align-middle mb-0">
                 <thead class="table-light border-bottom">
                   <tr>
-                    <th class="ps-3" style="width: 36px;">#</th>
+                    <th class="ps-3">ID Tiket</th>
                     <th>Status</th>
-                    <th class="d-none d-sm-table-cell">Jenis</th>
-                    <th class="d-none d-md-table-cell">Deskripsi</th>
-                    <th class="d-none d-sm-table-cell">Tanggal</th>
-                    <th class="text-center pe-3">Detail</th>
+                    <th class="text-center pe-3">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  @foreach($reports->sortByDesc('created_at') as $i => $report)
+                  @foreach($reports as $report)
                     @php
                       $statusConf = match($report->status) {
                         'menunggu' => ['color' => 'warning text-dark', 'icon' => 'bi-clock', 'label' => 'Menunggu'],
@@ -118,44 +115,27 @@
                       };
                     @endphp
                     <tr>
-                      <td class="ps-3 text-muted small">{{ $i + 1 }}</td>
+                      <td class="ps-3">
+                        <span class="text-primary fw-bold" style="font-size: 0.8rem;">{{ $report->ticket_id }}</span>
+                        <small class="text-muted d-block" style="font-size: 0.7rem;"><i class="bi bi-calendar3 me-1"></i>{{ $report->created_at->format('d M Y, H:i') }}</small>
+                      </td>
 
                       {{-- Status --}}
                       <td>
                         
-                        {{-- Mobile stacked info --}}
-                        <div class="d-flex flex-wrap gap-1 mt-1 d-sm-none">
-                          <span class="text-muted" style="font-size: 0.68rem;"><i class="bi bi-calendar3 me-1"></i>{{ $report->created_at->format('d M Y') }}</span>
-                          <span class="badge badge-{{ $report->issue_type }}" style="font-size: 0.65rem;">{{ ucfirst($report->issue_type) }}</span>
-                        </div>
                         <span class="badge bg-{{ $statusConf['color'] }} py-1 px-2">
                           {{ $statusConf['label'] }}
                         </span>
                       </td>
 
-                      {{-- Issue type --}}
-                      <td class="d-none d-sm-table-cell">
-                        <span class="badge badge-{{ $report->issue_type }}">{{ ucfirst($report->issue_type) }}</span>
-                      </td>
-
-                      {{-- Description preview --}}
-                      <td class="d-none d-md-table-cell small text-secondary" style="max-width: 200px;">
-                        {{ Str::limit($report->description, 45) }}
-                      </td>
-
-                      {{-- Date --}}
-                      <td class="d-none d-sm-table-cell small text-muted text-nowrap">
-                        {{ $report->created_at->format('d M Y, H:i') }}
-                      </td>
-
                       {{-- View detail button --}}
                       <td class="text-center pe-3">
                         <button type="button"
-                          class="btn btn-sm btn-outline-primary py-1 px-2"
+                          class="btn btn-sm btn-primary py-1 px-2 fw-semibold"
                           title="Lihat Detail"
                           data-bs-toggle="modal"
-                          data-bs-target="#dashReportDetailModal{{ $report->id }}">
-                          <i class="bi bi-eye-fill"></i>
+                          data-bs-target="#dashReportDetailModal{{ $report->ticket_id }}">
+                          <i class="bi bi-eye-fill"></i><span class="d-none d-sm-inline ms-1">Detail</span>
                         </button>
                       </td>
                     </tr>
@@ -189,7 +169,7 @@
     };
   @endphp
 
-  <div class="modal fade" id="dashReportDetailModal{{ $report->id }}" tabindex="-1" aria-hidden="true">
+  <div class="modal fade" id="dashReportDetailModal{{ $report->ticket_id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content" style="border-radius: 16px; overflow: hidden;">
 
@@ -197,7 +177,7 @@
         <div class="modal-header text-white" style="background: linear-gradient(135deg, #FF84BA, #99C2FF); border-bottom: none;">
           <div>
             <h5 class="modal-title fw-bold mb-0">
-              <i class="bi bi-ticket-detailed-fill me-2"></i>Detail Tiket #{{ $report->id }}
+              <i class="bi bi-ticket-detailed-fill me-2"></i>Detail Tiket {{ $report->ticket_id }}
             </h5>
             <small class="opacity-75" style="font-size: 0.78rem;">{{ $report->created_at->format('d M Y, H:i') }}</small>
           </div>
@@ -233,7 +213,7 @@
 
               @if($report->handled_by)
                 <div class="col-sm-6">
-                  <div class="small text-muted mb-1"><i class="bi bi-person-workspace me-1" style="color: #FF84BA;"></i> Teknisi Penanggung Jawab</div>
+                  <div class="small text-muted mb-1"><i class="bi bi-person-workspace me-1" style="color: #FF84BA;"></i> Teknisi:</div>
                   <div class="fw-bold text-dark small">{{ $report->technician->name ?? 'N/A' }}</div>
                 </div>
               @endif
@@ -246,7 +226,7 @@
               @endif
 
               <div class="col-12">
-                <div class="small text-muted mb-1"><i class="bi bi-journal-text me-1" style="color: #FF84BA;"></i> Tindakan / Solusi Teknisi</div>
+                <div class="small text-muted mb-1"><i class="bi bi-journal-text me-1" style="color: #FF84BA;"></i> Catatan:</div>
                 <div class="p-2 rounded-2 bg-light border small text-dark" style="white-space: pre-line; min-height: 48px; line-height: 1.5;">
                   {{ $report->technician_notes ?: 'Belum ada catatan solusi.' }}
                 </div>

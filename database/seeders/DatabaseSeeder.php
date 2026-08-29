@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->refreshJsonFromExcel();
+
         // 1. Seed Teams
         $teams = json_decode(file_get_contents(database_path('seeders/json/team.json')), true);
         foreach ($teams as $team) {
@@ -136,5 +138,39 @@ class DatabaseSeeder extends Seeder
             );
         }
     }
-}
 
+    /**
+     * JSON is generated data. Refresh it from the current Excel workbooks on
+     * every seed run so additions and edits in Excel are always included.
+     */
+    private function refreshJsonFromExcel(): void
+    {
+        $converter = database_path('seeders/convert_excel_to_json.py');
+        if (!is_file($converter)) {
+            throw new \RuntimeException("Excel converter tidak ditemukan: {$converter}");
+        }
+
+        $commands = PHP_OS_FAMILY === 'Windows'
+            ? [['py', '-3', $converter], ['python', $converter]]
+            : [['python3', $converter], ['python', $converter]];
+
+        $errors = [];
+        foreach ($commands as $command) {
+            $process = new \Symfony\Component\Process\Process($command, base_path());
+            $process->setTimeout(120);
+            $process->run();
+
+            if ($process->isSuccessful()) {
+                $this->command?->info('Data seed diperbarui dari file Excel.');
+                return;
+            }
+
+            $errors[] = trim($process->getErrorOutput() ?: $process->getOutput());
+        }
+
+        throw new \RuntimeException(
+            'Gagal memperbarui data seed dari Excel. Pastikan Python dan openpyxl tersedia. '
+            . implode(' | ', array_filter($errors))
+        );
+    }
+}

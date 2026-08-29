@@ -52,7 +52,7 @@ class NewDeviceReport extends Notification
         $reporter = $this->report->reporter;
 
         return [
-            'report_id' => $this->report->id,
+            'report_id' => $this->report->ticket_id,
             'device_id' => $this->report->device_id,
             'device_series' => $device ? $device->series : 'N/A',
             'issue_type' => $this->report->issue_type,

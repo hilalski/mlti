@@ -28,6 +28,10 @@
           <table class="table align-middle mb-0">
             <tbody>
               <tr>
+                <td class="fw-bold text-dark" style="width: 160px; border-bottom: 1px solid #fdf5f9;">ID Tiket</td>
+                <td style="border-bottom: 1px solid #fdf5f9;"><span class="badge bg-primary">{{ $report->ticket_id }}</span></td>
+              </tr>
+              <tr>
                 <td class="fw-bold text-dark" style="width: 160px; border-bottom: 1px solid #fdf5f9;">Pelapor</td>
                 <td style="border-bottom: 1px solid #fdf5f9;">{{ $report->reporter->name ?? 'N/A' }}</td>
               </tr>
@@ -36,7 +40,7 @@
                 <td style="border-bottom: 1px solid #fdf5f9;">
                   @if($report->device)
                     <span class="fw-bold">{{ $report->device->brand ?? 'Perangkat' }} - {{ $report->device->series ?? '' }}</span>
-                    <span class="text-muted" style="font-size: 0.8rem;">({{ $report->device_id }})</span>
+                    <br><span class="text-muted" style="font-size: 0.8rem;">({{ $report->device_id }})</span>
                   @else
                     <span class="fw-bold text-primary"><i class="bi bi-wifi me-1"></i> Jaringan {{ $report->room->ruang ?? 'Ruangan' }}</span>
                     <span class="badge bg-light text-primary border border-primary-subtle ms-2 small">Seluruh Ruangan</span>
@@ -86,7 +90,7 @@
             <div class="card bg-white border mb-0" style="padding: 20px !important; border-left: 4px solid #FF84BA !important; border-color: var(--border-color) !important;">
               <div class="row g-3">
                 <div class="col-sm-6">
-                  <strong class="text-secondary small mb-1 d-block"><i class="bi bi-person-workspace me-1" style="color: #FF84BA;"></i> Teknisi Penanggung Jawab:</strong>
+                  <strong class="text-secondary small mb-1 d-block"><i class="bi bi-person-workspace me-1" style="color: #FF84BA;"></i> Teknisi:</strong>
                   <span class="text-dark small fw-bold" style="color: var(--text-primary) !important;">{{ $report->technician->name ?? 'N/A' }}</span>
                 </div>
 
@@ -98,7 +102,7 @@
                 @endif
 
                 <div class="col-12 mt-3 pt-3 border-top" style="border-top: 1px dashed var(--border-color) !important;">
-                  <strong class="text-secondary small mb-1 d-block"><i class="bi bi-journal-text me-1" style="color: #FF84BA;"></i> Tindakan / Solusi Teknisi:</strong>
+                  <strong class="text-secondary small mb-1 d-block"><i class="bi bi-journal-text me-1" style="color: #FF84BA;"></i> Catatan:</strong>
                   <p class="mb-0 small text-dark" style="white-space: pre-line;">{{ $report->technician_notes ?: 'Belum ada catatan solusi.' }}</p>
                 </div>
               </div>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Support\Str;
 
 #[Fillable(['device_id', 'id_ruang', 'reported_by', 'issue_type', 'description', 'status', 'technician_notes', 'handled_by', 'id_vendor', 'resolved_at'])]
 class Report extends Model
@@ -11,6 +12,21 @@ class Report extends Model
     protected $casts = [
         'resolved_at' => 'datetime',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Report $report): void {
+            if ($report->ticket_id) {
+                return;
+            }
+
+            do {
+                $ticketId = 'TCK-' . strtoupper(Str::random(6));
+            } while (static::where('ticket_id', $ticketId)->exists());
+
+            $report->ticket_id = $ticketId;
+        });
+    }
 
     public function device()
     {

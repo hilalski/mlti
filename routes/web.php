@@ -20,9 +20,11 @@ Route::post('/logout', [QrLoginController::class, 'logout'])->name('logout');
 // User Dashboard & Report Flow
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/quick-scan', [DashboardController::class, 'quickScan'])->name('dashboard.quick-scan');
     Route::get('/dashboard/devices/manage', [DashboardController::class, 'manage'])->name('dashboard.devices.manage');
     Route::post('/dashboard/devices/assign', [DashboardController::class, 'assign'])->name('dashboard.devices.assign');
     Route::post('/dashboard/devices/assign-from-room', [DashboardController::class, 'assignFromRoom'])->name('dashboard.devices.assign-from-room');
+    Route::post('/dashboard/devices/assign-to-room', [DashboardController::class, 'assignToRoom'])->name('dashboard.devices.assign-to-room');
     Route::post('/dashboard/devices/unassign', [DashboardController::class, 'unassign'])->name('dashboard.devices.unassign');
     Route::post('/dashboard/devices/swap', [DashboardController::class, 'swap'])->name('dashboard.devices.swap');
     Route::post('/dashboard/devices/move-to-gudang', [DashboardController::class, 'moveToGudang'])->name('dashboard.devices.move-to-gudang');

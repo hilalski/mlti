@@ -585,6 +585,13 @@
     let isVerifying = false;
     let focusDistanceTimer = null;
 
+    // Dipasang sebelum inisialisasi scanner agar login NIP tetap berfungsi bila CDN scanner gagal dimuat.
+    document.getElementById('manual-login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nip = document.getElementById('manual_nip').value.trim();
+      if (nip) verifyNip(nip);
+    });
+
     reader.innerHTML = '<video id="qr-video" autoplay muted playsinline></video>';
     const qrVideo = document.getElementById('qr-video');
 
@@ -692,32 +699,29 @@
       stopScanner().finally(() => verifyNip(decodedText));
     }
 
-    const qrScanner = new QrScanner(
-      qrVideo,
-      result => onScanSuccess(result.data),
-      {
-        preferredCamera: 'environment',
-        maxScansPerSecond: 25,
-        highlightScanRegion: false,
-        highlightCodeOutline: false,
-        returnDetailedScanResult: true,
-      }
-    );
-    scannerToggle.addEventListener('click', startScanner);
-    autoFocusButton.addEventListener('click', requestAutomaticFocus);
-    focusDistanceInput.addEventListener('input', () => {
-      clearTimeout(focusDistanceTimer);
-      focusDistanceTimer = setTimeout(applyManualFocusDistance, 120);
-    });
-
-    // Manual Input Form
-    document.getElementById('manual-login-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const nip = document.getElementById('manual_nip').value.trim();
-      if (nip) {
-        verifyNip(nip);
-      }
-    });
+    let qrScanner = null;
+    if (typeof QrScanner === 'undefined') {
+      scannerToggle.disabled = true;
+      scannerToggle.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i> Scanner tidak tersedia';
+    } else {
+      qrScanner = new QrScanner(
+        qrVideo,
+        result => onScanSuccess(result.data),
+        {
+          preferredCamera: 'environment',
+          maxScansPerSecond: 25,
+          highlightScanRegion: false,
+          highlightCodeOutline: false,
+          returnDetailedScanResult: true,
+        }
+      );
+      scannerToggle.addEventListener('click', startScanner);
+      autoFocusButton.addEventListener('click', requestAutomaticFocus);
+      focusDistanceInput.addEventListener('input', () => {
+        clearTimeout(focusDistanceTimer);
+        focusDistanceTimer = setTimeout(applyManualFocusDistance, 120);
+      });
+    }
 
     function verifyNip(nipString) {
       messageDiv.classList.remove('d-none', 'alert-danger', 'alert-info', 'alert-success');

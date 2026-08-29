@@ -28,16 +28,18 @@ class ReportController extends Controller
         return view('admin.reports.index', compact('reports'));
     }
 
-    public function show($id)
+    public function show($ticketId)
     {
-        $report = Report::with(['device.type', 'device.condition', 'reporter', 'technician', 'vendor'])->findOrFail($id);
+        $report = Report::with(['device.type', 'device.condition', 'reporter', 'technician', 'vendor'])
+            ->where(fn ($query) => $query->where('ticket_id', $ticketId)->orWhere('id', $ticketId))
+            ->firstOrFail();
         $vendors = VendorService::all();
         $technicians = User::where('is_jarkom', 1)->get();
 
         return view('admin.reports.show', compact('report', 'vendors', 'technicians'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $ticketId)
     {
         $request->validate([
             'status' => 'required|in:menunggu,diproses,selesai,ditolak',
@@ -46,7 +48,7 @@ class ReportController extends Controller
             'handled_by' => 'nullable|exists:users,nip_lama',
         ]);
 
-        $report = Report::findOrFail($id);
+        $report = Report::where(fn ($query) => $query->where('ticket_id', $ticketId)->orWhere('id', $ticketId))->firstOrFail();
 
         $data = [
             'status' => $request->status,
@@ -61,6 +63,6 @@ class ReportController extends Controller
 
         $report->update($data);
 
-        return redirect()->route('admin.reports.show', $id)->with('success', 'Laporan berhasil diperbarui.');
+        return redirect()->route('admin.reports.show', $report->ticket_id)->with('success', 'Laporan berhasil diperbarui.');
     }
 }

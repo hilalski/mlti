@@ -61,7 +61,7 @@
                 <option value="" disabled selected>-- Pilih Ruangan / Lokasi --</option>
                 @foreach($rooms as $room)
                   @php
-                    $deviceCount = $room->devices->count();
+                    $deviceCount = $room->ticket_devices->count();
                   @endphp
                   <option value="{{ $room->id }}" data-room-name="{{ $room->ruang }}" {{ ($selectedRoomId == $room->id) ? 'selected' : '' }}>
                     {{ $room->ruang }} ({{ $deviceCount }} Perangkat)
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        currentRoomDevices = room.devices || [];
+        currentRoomDevices = room.ticket_devices || [];
         selectedRoomTitle.innerText = room.ruang;
         deviceSection.style.display = 'block';
 
@@ -317,6 +317,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const typeName = dev.type ? dev.type.jenis : 'Lainnya';
             const condName = dev.condition ? dev.condition.kondisi : 'N/A';
             const condClass = dev.id_condition == 1 ? 'success' : (dev.id_condition == 2 ? 'warning text-dark' : 'danger');
+            const ownerName = dev.user ? dev.user.name : (dev.room ? dev.room.ruang : 'Gudang');
+            const ownerIcon = dev.user ? 'bi-person-fill' : (dev.room ? 'bi-house-door-fill' : 'bi-box-seam-fill');
 
             let iconHtml = '<i class="bi bi-cpu-fill text-secondary"></i>';
             const lowerType = typeName.toLowerCase();
@@ -333,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
             item.className = `p-3 mb-2 rounded-3 border bg-white cursor-pointer device-item d-flex justify-content-between align-items-center transition ${isSelected ? 'border-primary shadow-sm bg-primary-subtle' : ''}`;
             item.style.cursor = 'pointer';
             item.setAttribute('data-device-id', dev.id);
-            item.setAttribute('data-search', `${dev.brand || ''} ${dev.series || ''} ${dev.id || ''} ${typeName}`.toLowerCase());
+            item.setAttribute('data-search', `${dev.brand || ''} ${dev.series || ''} ${dev.id || ''} ${typeName} ${ownerName}`.toLowerCase());
 
             item.innerHTML = `
                 <div class="d-flex align-items-center">
@@ -343,6 +345,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div>
                         <div class="fw-bold text-dark">${dev.brand || 'Perangkat'} - ${dev.series || ''}</div>
                         <small class="text-muted">Kode BMN: <span class="fw-semibold">${dev.id}</span> | S/N: ${dev.serial_number || '-'}</small>
+                        <small class="text-muted d-block" style="font-size: 0.75rem;"><i class="bi ${ownerIcon} me-1"></i>Pemilik: ${ownerName}</small>
                         <div class="mt-1">
                             <span class="badge bg-light border border-primary-subtle small py-1 px-2 me-1" style="color: #000 !important;">${typeName}</span>
                             <span class="badge bg-${condClass} py-1 px-2 small">${condName}</span>
