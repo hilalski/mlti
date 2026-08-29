@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
-#[Fillable(['device_id', 'reported_by', 'issue_type', 'description', 'status', 'technician_notes', 'handled_by', 'id_vendor', 'resolved_at'])]
+#[Fillable(['device_id', 'id_ruang', 'reported_by', 'issue_type', 'description', 'status', 'technician_notes', 'handled_by', 'id_vendor', 'resolved_at'])]
 class Report extends Model
 {
     protected $casts = [
@@ -15,6 +15,11 @@ class Report extends Model
     public function device()
     {
         return $this->belongsTo(Device::class, 'device_id', 'id');
+    }
+
+    public function room()
+    {
+        return $this->belongsTo(Room::class, 'id_ruang', 'id');
     }
 
     public function reporter()

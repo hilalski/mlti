@@ -32,10 +32,15 @@
                 <td style="border-bottom: 1px solid #fdf5f9;">{{ $report->reporter->name ?? 'N/A' }}</td>
               </tr>
               <tr>
-                <td class="fw-bold text-dark" style="border-bottom: 1px solid #fdf5f9;">Perangkat</td>
+                <td class="fw-bold text-dark" style="border-bottom: 1px solid #fdf5f9;">Perangkat / Lokasi</td>
                 <td style="border-bottom: 1px solid #fdf5f9;">
-                  <span class="fw-bold">{{ $report->device->brand ?? 'N/A' }} - {{ $report->device->series ?? 'N/A' }}</span>
-                  <span class="text-muted ms-2" style="font-size: 0.8rem;">(BMN: {{ $report->device_id }})</span>
+                  @if($report->device)
+                    <span class="fw-bold">{{ $report->device->brand ?? 'Perangkat' }} - {{ $report->device->series ?? '' }}</span>
+                    <span class="text-muted" style="font-size: 0.8rem;">({{ $report->device_id }})</span>
+                  @else
+                    <span class="fw-bold text-primary"><i class="bi bi-wifi me-1"></i> Jaringan {{ $report->room->ruang ?? 'Ruangan' }}</span>
+                    <span class="badge bg-light text-primary border border-primary-subtle ms-2 small">Seluruh Ruangan</span>
+                  @endif
                 </td>
               </tr>
               <tr>
@@ -110,7 +115,7 @@
                 <i class="bi bi-clock-fill text-primary fs-4 me-3"></i>
                 <div>
                   <h6 class="fw-bold mb-1" style="color: var(--text-primary);">Menunggu Penugasan Teknisi</h6>
-                  <p class="mb-0 text-muted small" style="line-height: 1.5;">Laporan Anda telah berhasil diajukan dan saat ini terdaftar di antrian sistem. Tim Jarkom sedang meninjau dan akan segera menugaskan petugas teknis.</p>
+                  <p class="mb-0 text-muted small" style="line-height: 1.5;">Laporan Anda telah diterima oleh sistem.</p>
                 </div>
               </div>
             </div>

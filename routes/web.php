@@ -22,10 +22,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/devices/manage', [DashboardController::class, 'manage'])->name('dashboard.devices.manage');
     Route::post('/dashboard/devices/assign', [DashboardController::class, 'assign'])->name('dashboard.devices.assign');
+    Route::post('/dashboard/devices/assign-from-room', [DashboardController::class, 'assignFromRoom'])->name('dashboard.devices.assign-from-room');
     Route::post('/dashboard/devices/unassign', [DashboardController::class, 'unassign'])->name('dashboard.devices.unassign');
     Route::post('/dashboard/devices/swap', [DashboardController::class, 'swap'])->name('dashboard.devices.swap');
+    Route::post('/dashboard/devices/move-to-gudang', [DashboardController::class, 'moveToGudang'])->name('dashboard.devices.move-to-gudang');
     Route::get('/dashboard/devices/{id}', [DashboardController::class, 'show'])->name('dashboard.devices.show');
     
+    Route::get('/report/open-ticket', [ReportController::class, 'openTicket'])->name('report.open-ticket');
     Route::get('/report/create/{device_id}', [ReportController::class, 'create'])->name('report.create');
     Route::post('/report', [ReportController::class, 'store'])->name('report.store');
     Route::get('/report/status/{device_id}', [ReportController::class, 'status'])->name('report.status');

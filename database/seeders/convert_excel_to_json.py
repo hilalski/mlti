@@ -15,7 +15,8 @@ files = [
     'condition.xlsx',
     'source.xlsx',
     'status_bmn.xlsx',
-    'vendor_service.xlsx'
+    'vendor_service.xlsx',
+    'qr_pusat.xlsx'
 ]
 
 for fname in files:

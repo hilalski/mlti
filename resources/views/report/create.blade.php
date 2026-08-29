@@ -58,7 +58,6 @@
             <div class="mb-4">
               <label for="description" class="form-label fw-bold text-dark">Deskripsi Kendala <span class="text-danger">*</span></label>
               <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="5" placeholder="Jelaskan secara mendetail kendala atau kerusakan yang dialami oleh perangkat tersebut..." required>{{ old('description') }}</textarea>
-              <div class="form-text small text-muted">Jelaskan kronologis kendala secara jelas untuk memudahkan tim teknis melakukan diagnosis.</div>
               @error('description')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror

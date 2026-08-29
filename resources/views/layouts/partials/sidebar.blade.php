@@ -12,6 +12,13 @@
       </a>
     </li>
 
+    <!-- <li class="nav-item">
+      <a class="nav-link {{ request()->routeIs('report.open-ticket*') ? 'active' : '' }}" href="{{ route('report.open-ticket') }}">
+        <i class="bi bi-ticket-detailed-fill"></i>
+        <span>Open Ticket</span>
+      </a>
+    </li> -->
+
     <li class="nav-item">
       <a class="nav-link {{ request()->routeIs('reports.history*') ? 'active' : '' }}" href="{{ route('reports.history') }}">
         <i class="bi bi-journal-text"></i>

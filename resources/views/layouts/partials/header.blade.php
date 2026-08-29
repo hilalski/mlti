@@ -3,7 +3,7 @@
 
   <div class="d-flex align-items-center justify-content-between">
     <a href="{{ route('dashboard') }}" class="logo d-flex align-items-center">
-      <span class="d-none d-lg-block text-white" style="color: var(--color-accent) !important; font-size: 1.6rem; font-weight: 800; letter-spacing: 0.5px;">MLTI REPORT</span>
+      <span class="d-none d-lg-block text-white" style="color: var(--color-accent) !important; font-size: 1.6rem; font-weight: 800; letter-spacing: 0.5px;">MLTI</span>
     </a>
     <i class="bi bi-list toggle-sidebar-btn text-white"></i>
   </div><!-- End Logo -->
@@ -72,11 +72,10 @@
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile border-0 shadow-lg" style="min-width: 260px;">
             <li class="dropdown-header py-3 bg-light text-dark text-start rounded-top">
-              <h6 class="fw-bold mb-2 text-primary" style="font-size: 0.95rem;">{{ auth()->user()->name }}</h6>
+              <h6 class="fw-bold mb-2" style="font-size: 0.95rem; color: #99C2FF;">{{ auth()->user()->name }}</h6>
               <div class="d-flex flex-column gap-1 small text-muted" style="font-size: 0.8rem;">
-                <div><span class="fw-bold">NIP Lama:</span> {{ auth()->user()->nip_lama }}</div>
-                <div><span class="fw-bold">NIP Baru:</span> {{ auth()->user()->nip_baru ?: '-' }}</div>
-                <div><span class="fw-bold">Jabatan:</span> {{ auth()->user()->jabatan ?: '-' }}</div>
+                <div><span class="fw-bold" style="color: #FF84BA;">{{ auth()->user()->nip_lama }}</span></div>
+                <div><span class="fw-bold" style="color: #99C2FF;">{{ auth()->user()->jabatan ?: '-' }}</span></div>
               </div>
             </li>
             <li>

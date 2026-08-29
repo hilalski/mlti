@@ -94,6 +94,15 @@ class DatabaseSeeder extends Seeder
             User::where('nip_lama', '>', 100)->first()?->update(['is_jarkom' => 1]);
         }
 
+        // 8. Seed QrPusat
+        $qrPusats = json_decode(file_get_contents(database_path('seeders/json/qr_pusat.json')), true);
+        foreach ($qrPusats as $qr) {
+            \App\Models\QrPusat::updateOrCreate(
+                ['qr_pusat' => $qr['qr_pusat']],
+                ['id_user' => (int)$qr['id_user']]
+            );
+        }
+
         // 7. Seed Devices
         $devices = json_decode(file_get_contents(database_path('seeders/json/device.json')), true);
         $roomIds = Room::pluck('id')->toArray();

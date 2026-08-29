@@ -76,6 +76,114 @@
   <!-- Template Main JS File -->
   <script src="{{ asset('assets/js/main.js') }}"></script>
 
+  <!-- Custom Modern Confirmation Modal -->
+  <div id="custom-confirm-modal" class="custom-confirm-overlay" style="display: none;">
+    <div class="custom-confirm-box">
+      <div class="custom-confirm-icon">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+      </div>
+      <h5 class="custom-confirm-title">Konfirmasi Tindakan</h5>
+      <p id="custom-confirm-message" class="custom-confirm-text">Apakah Anda yakin?</p>
+      <div class="custom-confirm-buttons">
+        <button id="custom-confirm-cancel-btn" class="btn-confirm-secondary">Batal</button>
+        <button id="custom-confirm-ok-btn" class="btn-confirm-primary">Lanjutkan</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global Confirmation Modal Functions
+    function showCustomConfirm(message, callback) {
+      const modal = document.getElementById('custom-confirm-modal');
+      const messageEl = document.getElementById('custom-confirm-message');
+      const okBtn = document.getElementById('custom-confirm-ok-btn');
+      const cancelBtn = document.getElementById('custom-confirm-cancel-btn');
+      
+      if (!modal || !messageEl || !okBtn || !cancelBtn) return;
+      
+      messageEl.textContent = message;
+      modal.style.display = 'flex';
+      
+      // Force reflow and add class for transitions
+      setTimeout(() => {
+        modal.classList.add('show');
+      }, 10);
+      
+      // Clean up previous event listeners
+      const newOkBtn = okBtn.cloneNode(true);
+      const newCancelBtn = cancelBtn.cloneNode(true);
+      okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+      cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+      
+      newOkBtn.addEventListener('click', function() {
+        closeCustomConfirm();
+        if (callback) callback();
+      });
+      
+      newCancelBtn.addEventListener('click', function() {
+        closeCustomConfirm();
+      });
+      
+      // Click outside overlay to close
+      modal.onclick = function(e) {
+        if (e.target === modal) {
+          closeCustomConfirm();
+        }
+      };
+    }
+
+    function closeCustomConfirm() {
+      const modal = document.getElementById('custom-confirm-modal');
+      if (!modal) return;
+      
+      modal.classList.remove('show');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 250);
+    }
+
+    // Automatically hijack all forms with standard onsubmit="return confirm('...')"
+    document.addEventListener('DOMContentLoaded', function() {
+      const bindConfirmForms = () => {
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+          const onsubmitAttr = form.getAttribute('onsubmit');
+          if (onsubmitAttr && onsubmitAttr.includes('confirm(')) {
+            let message = "Apakah Anda yakin?";
+            const match = onsubmitAttr.match(/confirm\(['"](.+?)['"]\)/);
+            if (match && match[1]) {
+              message = match[1];
+            }
+            
+            // Remove the inline handler to prevent browser confirm popups
+            form.removeAttribute('onsubmit');
+            
+            // Register custom submit listener
+            form.addEventListener('submit', function(e) {
+              if (form.dataset.confirmed === 'true') {
+                return;
+              }
+              e.preventDefault();
+              
+              showCustomConfirm(message, function() {
+                form.dataset.confirmed = 'true';
+                form.submit();
+              });
+            });
+          }
+        });
+      };
+      
+      bindConfirmForms();
+      
+      // Handle dynamic AJAX loads if any
+      if (typeof MutationObserver !== 'undefined') {
+        const observer = new MutationObserver(bindConfirmForms);
+        observer.observe(document.body, { childList: true, subtree: true });
+      }
+    });
+  </script>
+
   @yield('scripts')
 </body>
 

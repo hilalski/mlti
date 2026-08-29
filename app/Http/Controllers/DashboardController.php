@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Device;
+use App\Models\Room;
 use App\Models\Type;
 use App\Models\Report;
 use Illuminate\Http\Request;
@@ -27,15 +28,20 @@ class DashboardController extends Controller
                 ->get();
         }
 
-        // Fetch available devices (where id_user is Gudang (15), Unknown (99), or null)
-        $availableDevices = Device::where(function($q) {
-            $q->whereIn('id_user', [15, 99])
+        // Fetch all devices for addition/swap (excluding the ones the current user already owns)
+        $availableDevices = Device::where(function($q) use ($user) {
+            $q->where('id_user', '!=', $user->nip_lama)
               ->orWhereNull('id_user');
-        })->with(['type', 'condition'])->get();
+        })->with(['type', 'condition', 'user', 'room'])->get();
 
         $types = Type::all();
 
-        return view('dashboard', compact('devices', 'roomDevices', 'availableDevices', 'types'));
+        // All rooms with their devices for Open Ticket feature
+        $allRooms = Room::with(['devices' => function($q) {
+            $q->with(['type', 'condition']);
+        }])->get();
+
+        return view('dashboard', compact('devices', 'roomDevices', 'availableDevices', 'types', 'allRooms'));
     }
 
     public function manage(Request $request)
@@ -83,6 +89,28 @@ class DashboardController extends Controller
         return back()->with('success', 'Perangkat berhasil ditambahkan ke daftar penguasaan Anda.');
     }
 
+    /**
+     * Assign a room device to the currently logged-in user (take personal ownership).
+     */
+    public function assignFromRoom(Request $request)
+    {
+        $request->validate([
+            'device_id' => 'required|exists:devices,id',
+        ]);
+
+        $device = Device::findOrFail($request->device_id);
+        $user   = Auth::user();
+
+        // Only allow if device belongs to the user's room
+        if ($device->id_user != $user->id_ruang) {
+            return back()->with('error', 'Perangkat ini bukan milik ruangan Anda.');
+        }
+
+        $device->update(['id_user' => $user->nip_lama]);
+
+        return back()->with('success', 'Perangkat ruangan berhasil Anda kuasai secara pribadi.');
+    }
+
     public function unassign(Request $request)
     {
         $request->validate([
@@ -100,6 +128,29 @@ class DashboardController extends Controller
         }
 
         return back()->with('error', 'Anda tidak memiliki hak untuk melepaskan perangkat ini.');
+    }
+
+    /**
+     * Move a room device to Gudang (id_user = 15).
+     * Used by the "delete" button on room device cards.
+     */
+    public function moveToGudang(Request $request)
+    {
+        $request->validate([
+            'device_id' => 'required|exists:devices,id',
+        ]);
+
+        $device = Device::findOrFail($request->device_id);
+
+        // Only allow moving devices that belong to the user's room
+        $user = Auth::user();
+        if ($device->id_user != $user->id_ruang) {
+            return back()->with('error', 'Anda tidak memiliki hak untuk memindahkan perangkat ini.');
+        }
+
+        $device->update(['id_user' => 15]); // 15 = Gudang
+
+        return back()->with('success', 'Perangkat berhasil dipindahkan ke Gudang.');
     }
 
     public function swap(Request $request)

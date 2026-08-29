@@ -31,14 +31,19 @@
               <td style="border-bottom: 1px solid #f1f5f9;">{{ $report->reporter->name ?? 'N/A' }}</td>
             </tr>
             <tr>
-              <td class="fw-bold text-dark" style="border-bottom: 1px solid #f1f5f9;">Fungsi / Jabatan</td>
-              <td style="border-bottom: 1px solid #f1f5f9;">Fungsi {{ $report->reporter->fungsi ?? 'N/A' }} &mdash; {{ $report->reporter->jabatan ?? '-' }}</td>
+              <td class="fw-bold text-dark" style="border-bottom: 1px solid #f1f5f9;">Jabatan</td>
+              <td style="border-bottom: 1px solid #f1f5f9;">{{ $report->reporter->jabatan ?? '-' }}</td>
             </tr>
             <tr>
-              <td class="fw-bold text-dark" style="border-bottom: 1px solid #f1f5f9;">Perangkat</td>
+              <td class="fw-bold text-dark" style="border-bottom: 1px solid #f1f5f9;">Perangkat / Lokasi</td>
               <td style="border-bottom: 1px solid #f1f5f9;">
-                <span class="fw-bold">{{ $report->device->brand ?? 'N/A' }} - {{ $report->device->series ?? 'N/A' }}</span>
-                <span class="text-muted ms-2" style="font-size: 0.8rem;">(BMN: {{ $report->device_id }})</span>
+                @if($report->device)
+                  <span class="fw-bold">{{ $report->device->brand ?? 'Perangkat' }} - {{ $report->device->series ?? '' }}</span>
+                  <span class="text-muted ms-2" style="font-size: 0.8rem;">(BMN: {{ $report->device_id }})</span>
+                @else
+                  <span class="fw-bold text-primary"><i class="bi bi-wifi me-1"></i> Jaringan {{ $report->room->ruang ?? 'Ruangan' }}</span>
+                  <span class="badge bg-light text-primary border border-primary-subtle ms-2 small">Seluruh Ruangan</span>
+                @endif
               </td>
             </tr>
             <tr>

@@ -3,7 +3,7 @@
 @section('title', 'Dashboard Perangkat TI | MLTI-Report')
 
 @section('content')
-<div class="pagetitle d-flex justify-content-between align-items-center mb-3">
+<div class="pagetitle d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2 mb-3">
   <div>
     <h1 class="fw-bold" style="color: var(--color-primary);">Perangkat TI Saya</h1>
     <nav>
@@ -12,6 +12,11 @@
         <li class="breadcrumb-item active">Perangkat Saya</li>
       </ol>
     </nav>
+  </div>
+  <div class="d-flex gap-2">
+    <button type="button" class="btn btn-primary btn-sm px-3 py-2 fw-semibold shadow-sm" data-bs-toggle="modal" data-bs-target="#openTicketModal">
+      <i class="bi bi-ticket-detailed-fill me-1"></i> Open Ticket
+    </button>
   </div>
 </div><!-- End Page Title -->
 
@@ -29,7 +34,7 @@
             <div class="col-md-9">
               <h4 class="fw-bold mb-2 text-white" style="font-size: 1.6rem; letter-spacing: 0.5px;">Selamat Datang Kembali, {{ auth()->user()->name }}!</h4>
               <p class="mb-0 text-white-50 small" style="line-height: 1.6; font-size: 0.95rem;">
-                Berikut adalah daftar seluruh perangkat TI yang berada dalam penguasaan Anda. Anda dapat melaporkan kerusakan, memantau perbaikan, mengubah, atau melepaskan perangkat langsung dari kartu masing-masing.
+                Kelola dan pantau seluruh perangkat TI Anda dengan mudah dalam satu tempat.
               </p>
             </div>
             <div class="col-md-3 d-none d-md-flex justify-content-end align-items-center">
@@ -57,8 +62,7 @@
           </form>
 
           <div class="card-body pt-4 d-flex flex-column justify-content-between">
-            <div>
-              <div class="d-flex align-items-start mb-3">
+              <div class="d-flex align-items-start mb-1">
                 <div class="device-icon-wrapper p-3 bg-light rounded-3 me-3 text-secondary fs-2 d-flex align-items-center justify-content-center shadow-sm" style="width: 58px; height: 58px;">
                   @switch(strtolower($device->type->jenis ?? ''))
                     @case('pc')
@@ -76,13 +80,22 @@
                     @case('scanner')
                       <i class="bi bi-camera text-info"></i>
                       @break
+                    @case('tablet')
+                      <i class="bi bi-tablet text-primary"></i>
+                      @break
+                    @case('smartphone')
+                      <i class="bi bi-phone text-info"></i>
+                      @break
+                    @case('viewer')
+                      <i class="bi bi-projector text-secondary"></i>
+                      @break
                     @default
                       <i class="bi bi-cpu-fill text-secondary"></i>
                   @endswitch
                 </div>
                 <div class="flex-grow-1">
                   <div class="d-flex align-items-center justify-content-between">
-                    <span class="badge bg-light text-primary border border-primary-subtle small fw-bold px-2 py-1 mb-1">{{ $device->type->jenis ?? 'Lainnya' }}</span>
+                    <span class="badge bg-light border border-primary-subtle small fw-bold px-2 py-1 mb-1" style="color: #000 !important;">{{ $device->type->jenis ?? 'Lainnya' }}</span>
                   </div>
                   <h6 class="mb-0 text-dark fw-bold" style="font-size: 1.05rem; padding-right: 25px;">{{ $device->brand }} | <span class="text-muted small" style="font-size: 0.8rem;">{{ $device->series }}</span></h6>
                   
@@ -116,7 +129,6 @@
                   </tbody>
                 </table>
               </div>
-            </div>
 
             <!-- Card footer actions -->
             <div class="pt-3 border-top d-flex flex-column gap-2">
@@ -145,7 +157,7 @@
                 </div>
               @else
                 <a href="{{ route('report.create', $device->id) }}" class="btn btn-outline-danger btn-sm w-100 py-2 fw-semibold">
-                  <i class="bi bi-exclamation-triangle-fill me-1"></i> Laporkan Kerusakan
+                  <i class="bi bi-exclamation-triangle-fill me-1"></i> Laporkan Kendala
                 </a>
               @endif
             </div>
@@ -165,7 +177,7 @@
             <div class="modal-body">
               <div class="alert alert-warning small border-0 shadow-sm mb-3">
                 <i class="bi bi-exclamation-triangle me-1"></i> 
-                Mengganti perangkat berarti melepaskan perangkat {{ $device->brand }} - {{ $device->series }} (BMN: {{ $device->id }}), dan menggantinya dengan perangkat yang dipilih.
+                Mengganti perangkat berarti melepaskan {{ $device->brand }} - {{ $device->series }} (BMN: {{ $device->id }}), dan menggantinya dengan perangkat yang dipilih.
               </div>
 
               <h6 class="fw-bold mb-2">Pilih Perangkat Pengganti (Tipe: {{ $device->type->jenis ?? 'Lainnya' }})</h6>
@@ -181,7 +193,7 @@
                 @endphp
 
                 @forelse($availableOfType as $avail)
-                  <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 swap-item" data-search-text="{{ strtolower($avail->brand) }} {{ strtolower($avail->series) }} {{ strtolower($avail->id) }}">
+                  <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 swap-item" data-search-text="{{ strtolower($avail->brand) }} {{ strtolower($avail->series) }} {{ strtolower($avail->id) }} {{ $avail->user ? strtolower($avail->user->name) : ($avail->room ? strtolower($avail->room->ruang) : 'gudang') }}">
                     <div>
                       <div class="fw-bold text-dark">{{ $avail->brand }} - {{ $avail->series }}</div>
                       <small class="text-muted">Kode BMN: {{ $avail->id }}
@@ -189,20 +201,29 @@
                           Kondisi: {{ $avail->condition->kondisi ?? 'N/A' }}
                         </span>
                       </small>
-                      
+                      <div class="mt-1 small">
+                        <span class="text-muted" style="font-size: 0.8rem;">Pemilik saat ini:</span>
+                        @if($avail->user)
+                          <span class="fw-semibold" style="font-size: 0.8rem; color: #FF84BA;"><i class="bi bi-person-fill"></i> {{ $avail->user->name }}</span>
+                        @elseif($avail->room)
+                          <span class="fw-semibold" style="font-size: 0.8rem; color: #99C2FF;"><i class="bi bi-house-door-fill"></i> {{ $avail->room->ruang }}</span>
+                        @else
+                          <span class="fw-semibold" style="font-size: 0.8rem;"><i class="bi bi-box-seam-fill"></i> Gudang</span>
+                        @endif
+                      </div>
                     </div>
                     <form action="{{ route('dashboard.devices.swap') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengganti ke perangkat ini?');">
                       @csrf
                       <input type="hidden" name="old_device_id" value="{{ $device->id }}">
                       <input type="hidden" name="new_device_id" value="{{ $avail->id }}">
                       <button type="submit" class="btn btn-sm btn-primary text-white fw-bold">
-                        Pilih & Ganti
+                        Pilih
                       </button>
                     </form>
                   </div>
                 @empty
                   <div class="list-group-item text-center py-4 text-muted">
-                    Tidak ada perangkat dengan kategori ini yang tersedia di Gudang untuk saat ini.
+                    Tidak ada perangkat lain dengan kategori ini untuk saat ini.
                   </div>
                 @endforelse
               </div>
@@ -237,112 +258,186 @@
 </div>
 
 <section class="section dashboard">
-  <div class="row">
-    @forelse($roomDevices as $device)
-      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-        <div class="card h-100 card-device position-relative">
-          
-          <div class="card-body pt-4 d-flex flex-column justify-content-between">
-            <div>
-              <div class="d-flex align-items-start mb-3">
-                <div class="device-icon-wrapper p-3 bg-light rounded-3 me-3 text-secondary fs-2 d-flex align-items-center justify-content-center shadow-sm" style="width: 58px; height: 58px;">
-                  @switch(strtolower($device->type->jenis ?? ''))
-                    @case('pc')
-                      <i class="bi bi-pc-display text-primary"></i>
-                      @break
-                    @case('laptop')
-                      <i class="bi bi-laptop text-primary"></i>
-                      @break
-                    @case('printer')
-                      <i class="bi bi-printer text-success"></i>
-                      @break
-                    @case('ups')
-                      <i class="bi bi-lightning-charge-fill text-warning"></i>
-                      @break
-                    @case('scanner')
-                      <i class="bi bi-camera text-info"></i>
-                      @break
-                    @default
-                      <i class="bi bi-cpu-fill text-secondary"></i>
-                  @endswitch
-                </div>
-                <div class="flex-grow-1">
-                  <div class="d-flex align-items-center justify-content-between">
-                    <span class="badge bg-light text-primary border border-primary-subtle small fw-bold px-2 py-1 mb-1">{{ $device->type->jenis ?? 'Lainnya' }}</span>
+  <div class="card border-0 shadow-sm" style="border-radius: 18px !important; overflow: hidden !important; padding: 0 !important;">
+
+    @if($roomDevices->isEmpty())
+      <div class="p-5 text-center text-muted">
+        <i class="bi bi-inbox fs-1 mb-3 d-block" style="color: var(--color-secondary);"></i>
+        <p class="mb-0 small fw-semibold">Tidak ada perangkat lain di ruangan ini.</p>
+      </div>
+    @else
+      @php
+        /* Group room devices by type name */
+        $roomByType = $roomDevices->groupBy(fn($d) => $d->type->jenis ?? 'Lainnya');
+        $roomTypeKeys = $roomByType->keys();
+      @endphp
+
+      {{-- ── Tab Nav (Responsive Horizontal Scroll on Mobile) ── --}}
+      <div class="px-3 px-md-4 pt-3 pt-md-4 pb-0" style="border-bottom: 1px solid var(--border-color);">
+        <ul class="nav nav-tabs border-0 gap-1 tab-scroll-mobile" id="roomTypeTabs" role="tablist">
+          @foreach($roomTypeKeys as $idx => $typeName)
+            @php
+              $tabId = 'roomtab-' . Str::slug($typeName);
+              $count = $roomByType[$typeName]->count();
+            @endphp
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link fw-semibold px-3 px-md-4 py-2 text-nowrap {{ $idx === 0 ? 'active' : '' }}"
+                id="{{ $tabId }}-btn"
+                data-bs-toggle="tab"
+                data-bs-target="#{{ $tabId }}-pane"
+                type="button" role="tab"
+                style="border-radius: 10px 10px 0 0 !important; font-size: 0.85rem; border: 1px solid transparent; border-bottom: none; transition: all .2s;"
+              >
+                @switch(strtolower($typeName))
+                  @case('pc') <i class="bi bi-pc-display me-1"></i> @break
+                  @case('laptop') <i class="bi bi-laptop me-1"></i> @break
+                  @case('printer') <i class="bi bi-printer me-1"></i> @break
+                  @case('ups') <i class="bi bi-lightning-charge-fill me-1"></i> @break
+                  @case('scanner') <i class="bi bi-camera me-1"></i> @break
+                  @case('tablet') <i class="bi bi-tablet me-1"></i> @break
+                  @case('smartphone') <i class="bi bi-phone me-1"></i> @break
+                  @case('viewer') <i class="bi bi-projector me-1"></i> @break
+                  @default <i class="bi bi-cpu-fill me-1"></i>
+                @endswitch
+                {{ $typeName }}
+                <span class="badge ms-1 rounded-pill" style="font-size: 0.7rem; background: linear-gradient(135deg, #FF84BA, #99C2FF); color: #fff;">{{ $count }}</span>
+              </button>
+            </li>
+          @endforeach
+        </ul>
+      </div>
+
+      {{-- ── Tab Content ── --}}
+      <div class="tab-content p-4" id="roomTypeTabsContent">
+        @foreach($roomTypeKeys as $idx => $typeName)
+          @php $tabId = 'roomtab-' . Str::slug($typeName); @endphp
+          <div
+            class="tab-pane fade {{ $idx === 0 ? 'show active' : '' }}"
+            id="{{ $tabId }}-pane"
+            role="tabpanel"
+            aria-labelledby="{{ $tabId }}-btn"
+          >
+            <div class="row">
+              @foreach($roomByType[$typeName] as $device)
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                  <div class="card h-100 card-device position-relative" style="border-radius: 16px !important;">
+
+                    {{-- ── Trash / Pindah ke Gudang button ── --}}
+                    <button
+                      type="button"
+                      class="btn btn-link p-0 border-0 position-absolute"
+                      style="top: 14px; right: 14px; z-index: 10; line-height: 1;"
+                      title="Pindah ke Gudang"
+                      onclick="confirmMoveGudang('{{ $device->id }}', '{{ addslashes($device->brand . ' ' . $device->series) }}')"
+                    >
+                      <i class="bi bi-trash3-fill fs-5" style="color: #e11d48;"></i>
+                    </button>
+
+                    <div class="card-body pt-4 d-flex flex-column justify-content-between">
+                      <div>
+                        <div class="d-flex align-items-start mb-3">
+                          <div class="device-icon-wrapper p-3 bg-light rounded-3 me-3 text-secondary fs-2 d-flex align-items-center justify-content-center shadow-sm" style="width: 58px; height: 58px;">
+                            @switch(strtolower($device->type->jenis ?? ''))
+                              @case('pc')         <i class="bi bi-pc-display text-primary"></i>   @break
+                              @case('laptop')     <i class="bi bi-laptop text-primary"></i>      @break
+                              @case('printer')    <i class="bi bi-printer text-success"></i>   @break
+                              @case('ups')        <i class="bi bi-lightning-charge-fill text-warning"></i> @break
+                              @case('scanner')    <i class="bi bi-camera text-info"></i>       @break
+                              @case('tablet')     <i class="bi bi-tablet text-primary"></i>      @break
+                              @case('smartphone') <i class="bi bi-phone text-info"></i>     @break
+                              @case('viewer')     <i class="bi bi-projector text-secondary"></i> @break
+                              @default           <i class="bi bi-cpu-fill text-secondary"></i>
+                            @endswitch
+                          </div>
+                          <div class="flex-grow-1">
+                            <span class="badge bg-light border border-primary-subtle small fw-bold px-2 py-1 mb-1" style="color: #000 !important;">{{ $device->type->jenis ?? 'Lainnya' }}</span>
+                            <h6 class="mb-0 text-dark fw-bold" style="font-size: 1.05rem; padding-right: 28px;">
+                              {{ $device->brand }} | <span class="text-muted small" style="font-size: 0.8rem;">{{ $device->series }}</span>
+                            </h6>
+                          </div>
+                        </div>
+
+                        {{-- Specs --}}
+                        <div class="bg-light p-3 rounded-3 mb-3 border">
+                          <table class="table table-sm table-borderless small mb-0">
+                            <tbody>
+                              <tr><td class="text-muted p-0" style="width:90px;">Kode BMN</td><td class="p-0 text-dark fw-semibold">: {{ $device->id }}</td></tr>
+                              <tr><td class="text-muted p-0">No Seri</td><td class="p-0 text-dark">: {{ $device->serial_number ?: '-' }}</td></tr>
+                              <tr><td class="text-muted p-0">Tahun</td><td class="p-0 text-dark">: {{ $device->year ?: '-' }}</td></tr>
+                              <tr>
+                                <td class="text-muted p-0">Kondisi</td>
+                                <td class="p-0">
+                                  : <span class="badge bg-{{ $device->id_condition == 1 ? 'success' : ($device->id_condition == 2 ? 'warning text-dark' : 'danger') }} px-2 py-1 small">
+                                      {{ $device->condition->kondisi ?? 'Tidak Diketahui' }}
+                                    </span>
+                                </td>
+                              </tr>
+                              <tr><td class="text-muted p-0">Keterangan</td><td class="p-0 text-dark">: {{ $device->keterangan ?: '-' }}</td></tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+
+                      {{-- ── Footer actions ── --}}
+                      <div class="pt-3 border-top d-flex flex-column gap-2">
+
+                        {{-- 1. Detail --}}
+                        <a href="{{ route('dashboard.devices.show', $device->id) }}" class="btn btn-light btn-sm w-100 py-2 fw-semibold text-dark border">
+                          <i class="bi bi-info-circle me-1"></i> Detail &amp; Riwayat Perbaikan
+                        </a>
+
+                        {{-- 2. Kuasai (take personal ownership from room) --}}
+                        <form action="{{ route('dashboard.devices.assign-from-room') }}" method="POST"
+                              onsubmit="return confirm('Kuasai perangkat ini secara pribadi? Perangkat akan dipindah dari daftar ruangan ke daftar perangkat Anda.');">
+                          @csrf
+                          <input type="hidden" name="device_id" value="{{ $device->id }}">
+                          <button type="submit" class="btn btn-sm w-100 py-2 fw-semibold"
+                                  style="background: linear-gradient(135deg,rgba(255,132,186,.12),rgba(153,194,255,.12)); border: 1px solid rgba(255,132,186,.35); color: #000;">
+                            <i class="bi bi-person-check-fill me-1"></i> Kuasai Perangkat Ini
+                          </button>
+                        </form>
+
+                        {{-- 3. Lapor Kerusakan --}}
+                        @php $activeReport = $device->activeReport(); @endphp
+                        @if($activeReport)
+                          <div class="d-flex align-items-center justify-content-between pt-1">
+                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle py-2 px-3 fw-bold rounded-pill">
+                              <span class="spinner-grow spinner-grow-sm me-1 text-warning" role="status" style="width:10px;height:10px;"></span>
+                              {{ ucfirst($activeReport->status) }}
+                            </span>
+                            <a href="{{ route('report.status', $device->id) }}" class="btn btn-primary btn-sm px-3 fw-semibold shadow-sm">
+                              <i class="bi bi-eye-fill me-1"></i> Monitor
+                            </a>
+                          </div>
+                        @else
+                          <a href="{{ route('report.create', $device->id) }}" class="btn btn-outline-danger btn-sm w-100 py-2 fw-semibold">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> Laporkan Kendala
+                          </a>
+                        @endif
+
+                      </div>{{-- /footer --}}
+                    </div>
                   </div>
-                  <h6 class="mb-0 text-dark fw-bold" style="font-size: 1.05rem; padding-right: 25px;">{{ $device->brand }} | <span class="text-muted small" style="font-size: 0.8rem;">{{ $device->series }}</span></h6>
                 </div>
-              </div>
+              @endforeach
+            </div>{{-- /row --}}
+          </div>{{-- /tab-pane --}}
+        @endforeach
+      </div>{{-- /tab-content --}}
+    @endif
 
-              <!-- Device Specifications Table -->
-              <div class="bg-light p-3 rounded-3 mb-3 border">
-                <table class="table table-sm table-borderless small mb-0">
-                  <tbody>
-                    <tr class="pb-1">
-                      <td class="text-muted p-0" style="width: 90px;">Kode BMN</td>
-                      <td class="p-0 text-dark fw-semibold">: {{ $device->id }}</td>
-                    </tr>
-                    <tr class="pb-1">
-                      <td class="text-muted p-0">No Seri</td>
-                      <td class="p-0 text-dark">: {{ $device->serial_number ?: '-' }}</td>
-                    </tr>
-                    <tr class="pb-1">
-                      <td class="text-muted p-0">Tahun</td>
-                      <td class="p-0 text-dark">: {{ $device->year ?: '-' }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-muted p-0">Kondisi</td>
-                      <td class="p-0">
-                        : <span class="badge bg-{{ $device->id_condition == 1 ? 'success' : ($device->id_condition == 2 ? 'warning text-dark' : 'danger') }} px-2 py-1 small">
-                          {{ $device->condition->kondisi ?? 'Tidak Diketahui' }}
-                        </span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <!-- Card footer actions -->
-            <div class="pt-3 border-top d-flex flex-column gap-2">
-              <a href="{{ route('dashboard.devices.show', $device->id) }}" class="btn btn-light btn-sm w-100 py-2 fw-semibold text-dark border">
-                <i class="bi bi-info-circle me-1"></i> Detail & Riwayat Perbaikan
-              </a>
-
-              @php
-                $activeReport = $device->activeReport();
-              @endphp
-
-              @if($activeReport)
-                <div class="d-flex align-items-center justify-content-between pt-1">
-                  <span class="badge bg-warning-subtle text-warning border border-warning-subtle py-2 px-3 fw-bold rounded-pill">
-                    <span class="spinner-grow spinner-grow-sm me-1 text-warning" role="status" style="width: 10px; height: 10px;"></span>
-                    {{ ucfirst($activeReport->status) }}
-                  </span>
-                  <a href="{{ route('report.status', $device->id) }}" class="btn btn-primary btn-sm px-3 py-1.5 fw-semibold shadow-sm">
-                    <i class="bi bi-eye-fill me-1"></i> Monitor
-                  </a>
-                </div>
-              @else
-                <a href="{{ route('report.create', $device->id) }}" class="btn btn-outline-danger btn-sm w-100 py-2 fw-semibold">
-                  <i class="bi bi-exclamation-triangle-fill me-1"></i> Laporkan Kerusakan
-                </a>
-              @endif
-            </div>
-
-          </div>
-        </div>
-      </div>
-    @empty
-      <div class="col-12 mb-4">
-        <div class="card border-0 shadow-sm p-4 text-center text-muted bg-light">
-          <i class="bi bi-info-circle fs-3 mb-2 text-secondary"></i>
-          <p class="mb-0 small">Tidak ada perangkat lain di ruangan ini.</p>
-        </div>
-      </div>
-    @endforelse
-  </div>
+  </div>{{-- /card --}}
 </section>
+
+{{-- Hidden forms for move-to-gudang (triggered by JS confirm) --}}
+@foreach($roomDevices as $device)
+  <form id="gudang-form-{{ $device->id }}" action="{{ route('dashboard.devices.move-to-gudang') }}" method="POST" style="display:none;">
+    @csrf
+    <input type="hidden" name="device_id" value="{{ $device->id }}">
+  </form>
+@endforeach
+
 
 <!-- Global Add Device Modal -->
 <div class="modal fade" id="addDeviceModal" tabindex="-1" aria-labelledby="addDeviceModalLabel" aria-hidden="true">
@@ -381,14 +476,22 @@
                 @endphp
 
                 @forelse($typeAvails as $avail)
-                  <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 add-item" data-search-text="{{ strtolower($avail->brand) }} {{ strtolower($avail->series) }} {{ strtolower($avail->id) }}">
+                  <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 add-item" data-search-text="{{ strtolower($avail->brand) }} {{ strtolower($avail->series) }} {{ strtolower($avail->id) }} {{ $avail->user ? strtolower($avail->user->name) : ($avail->room ? strtolower($avail->room->ruang) : 'gudang') }}">
                     <div>
                       <div class="fw-bold text-dark">{{ $avail->brand }} - {{ $avail->series }}</div>
                       <small class="text-muted">Kode BMN: {{ $avail->id }} | S/N: {{ $avail->serial_number ?: '-' }}</small>
-                      <div>
+                      <div class="mt-1">
                         <span class="badge bg-{{ $avail->id_condition == 1 ? 'success' : ($avail->id_condition == 2 ? 'warning text-dark' : 'danger') }} py-1 small">
                           Kondisi: {{ $avail->condition->kondisi ?? 'N/A' }}
                         </span>
+                        <span class="ms-2 text-muted small" style="font-size: 0.8rem;">Pemilik saat ini:</span>
+                        @if($avail->user)
+                          <span class="fw-semibold small" style="font-size: 0.8rem; color: #FF84BA;"><i class="bi bi-person-fill"></i> {{ $avail->user->name }}</span>
+                        @elseif($avail->room)
+                          <span class="fw-semibold small" style="font-size: 0.8rem; color: #99C2FF;"><i class="bi bi-house-door-fill"></i> {{ $avail->room->ruang }}</span>
+                        @else
+                          <span class="fw-semibold small" style="font-size: 0.8rem;"><i class="bi bi-box-seam-fill"></i> Gudang</span>
+                        @endif
                       </div>
                     </div>
                     <form action="{{ route('dashboard.devices.assign') }}" method="POST" onsubmit="return confirm('Kuasai perangkat ini?');">
@@ -401,7 +504,7 @@
                   </div>
                 @empty
                   <div class="list-group-item text-center py-4 text-muted empty-db-msg">
-                    Tidak ada perangkat untuk kategori ini yang tersedia di Gudang.
+                    Tidak ada perangkat lain untuk kategori ini.
                   </div>
                 @endforelse
               </div>
@@ -413,6 +516,127 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Global Open Ticket Modal -->
+<div class="modal fade" id="openTicketModal" tabindex="-1" aria-labelledby="openTicketModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-sm-down">
+    <div class="modal-content" style="border-radius: 18px; overflow: hidden;">
+      <div class="modal-header bg-primary text-white" style="background: linear-gradient(135deg, #FF84BA 0%, #99C2FF 100%) !important;">
+        <h5 class="modal-title fw-bold" id="openTicketModalLabel">
+          <i class="bi bi-ticket-detailed-fill me-2"></i> Form Tiket Kendala
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-3 p-md-4">
+        
+        <p class="text-muted small mb-3">
+          Gunakan opsi ini untuk melaporkan kerusakan perangkat atau kendala jaringan internet di ruangan tertentu (misalnya ruang tanpa pegawai seperti Aula, Gudang, Server, dsb).
+        </p>
+
+        <form action="{{ route('report.store') }}" method="POST" id="modalOpenTicketForm">
+          @csrf
+
+          <!-- 1. Room Selection -->
+          <div class="mb-3">
+            <label for="modal_room_selector" class="form-label fw-bold text-dark">
+              <i class="bi bi-house-door-fill text-primary me-1"></i> Pilih Ruangan / Lokasi <span class="text-danger">*</span>
+            </label>
+            <select class="form-select" id="modal_room_selector" name="room_id" required>
+              <option value="" disabled selected>-- Pilih Ruangan / Lokasi --</option>
+              @foreach($allRooms as $room)
+                @php $dCount = $room->devices->count(); @endphp
+                <option value="{{ $room->id }}" data-room-name="{{ $room->ruang }}">
+                  {{ $room->ruang }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+
+          <!-- 2. Issue Type -->
+          <div class="mb-3">
+            <label for="modal_issue_type" class="form-label fw-bold text-dark">
+              <i class="bi bi-tag-fill text-primary me-1"></i> Jenis Kendala <span class="text-danger">*</span>
+            </label>
+            <select class="form-select" id="modal_issue_type" name="issue_type" required>
+              <option value="" disabled selected>-- Pilih Kategori Kendala --</option>
+              <option value="hardware">Hardware (Perangkat Keras: Monitor, RAM, Harddisk, Mati Total)</option>
+              <option value="software">Software (Perangkat Lunak: OS Lambat, Aplikasi Crash, Lisensi)</option>
+              <option value="jaringan">Jaringan (Koneksi WiFi Putus, Kabel LAN Rusak, Internet Lambat / Seluruh Ruangan)</option>
+            </select>
+          </div>
+
+          <!-- 3. Network Room-wide Info Banner (shown only when issue_type is 'jaringan') -->
+          <div id="modal_network_info_banner" class="alert alert-light border border-primary-subtle d-none mb-3 p-3 rounded-3" style="background: rgba(153, 194, 255, 0.08);">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-wifi text-primary fs-4 me-2"></i>
+              <div>
+                <strong class="text-dark small d-block mb-1">Kendala Jaringan / Internet</strong>
+                <span class="text-muted small" style="font-size: 0.825rem;">
+                  Jika masalah dialami oleh seluruh ruangan, lewati pemilihan perangkat di bawah.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Device Selection -->
+          <div id="modal_device_selection_section" class="mb-3" style="display: none;">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2 mb-2">
+              <label class="form-label fw-bold text-dark mb-0">
+                Pilih Perangkat di <span id="modal_selected_room_title" class="text-primary fw-bold"></span> 
+                <span id="modal_device_required_badge" class="text-danger">*</span>
+              </label>
+              <div class="d-flex gap-2 w-100 w-sm-auto justify-content-end">
+                <!-- <button type="button" class="btn btn-outline-secondary btn-sm d-none" id="modal_btn_skip_device" style="font-size: 0.75rem;">
+                  <i class="bi bi-x-circle me-1"></i> Tanpa Perangkat Spesifik
+                </button> -->
+                <input type="text" id="modal_filter_device_input" class="form-control form-control-sm" placeholder="Cari merk / BMN...">
+              </div>
+            </div>
+
+            <div class="border rounded-3 p-2 bg-light overflow-auto" id="modal_devices_list_container" style="max-height: 220px;">
+              <!-- Populated via JS -->
+            </div>
+            <input type="hidden" name="device_id" id="modal_selected_device_id">
+          </div>
+
+          <!-- 5. Preview of Selected Device -->
+          <div id="modal_selected_device_preview" class="alert alert-info border-0 shadow-sm p-3 mb-3 d-none" style="background: linear-gradient(135deg, rgba(255, 132, 186, 0.12), rgba(153, 194, 255, 0.15)); border-radius: 14px;">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <div class="device-icon-wrapper p-2 bg-white rounded-3 shadow-sm me-3 text-secondary fs-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; min-width: 50px;" id="modal_preview_icon">
+                  <i class="bi bi-pc-display text-primary"></i>
+                </div>
+                <div>
+                  <span class="badge bg-light border border-primary-subtle small fw-bold px-2 py-1 mb-1" style="color: #000 !important;" id="modal_preview_type">Tipe</span>
+                  <h6 class="mb-0 text-dark fw-bold" id="modal_preview_title">Nama Perangkat</h6>
+                  <small class="text-muted" id="modal_preview_bmn">BMN: -</small>
+                </div>
+              </div>
+              <button type="button" class="btn btn-sm btn-link text-danger p-0 border-0" id="modal_btn_remove_selected_device" title="Hapus Pilihan">
+                <i class="bi bi-x-circle-fill fs-5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- 6. Description -->
+          <div class="mb-3">
+            <label for="modal_description" class="form-label fw-bold text-dark">Deskripsi Kendala <span class="text-danger">*</span></label>
+            <textarea class="form-control" id="modal_description" name="description" rows="3" placeholder="Jelaskan secara detail kendala yang dialami..." required></textarea>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2 border-top pt-3">
+            <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-primary px-4 btn-accent" id="modal_submit_btn" disabled>
+              <i class="bi bi-send-fill me-1"></i> Kirim Laporan Tiket
+            </button>
+          </div>
+
+        </form>
+
       </div>
     </div>
   </div>
@@ -494,5 +718,264 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// ── Move-to-Gudang custom confirm dialog ──────────────────────────────────
+function confirmMoveGudang(deviceId, deviceName) {
+    const overlay = document.createElement('div');
+    overlay.className = 'custom-confirm-overlay';
+    overlay.innerHTML = `
+      <div class="custom-confirm-box">
+        <div class="custom-confirm-icon">
+          <i class="bi bi-trash3-fill" style="color:#e11d48;"></i>
+        </div>
+        <div class="custom-confirm-title">Pindah ke Gudang?</div>
+        <div class="custom-confirm-text">
+          Perangkat <strong>${deviceName}</strong> akan dipindahkan ke <strong>Gudang</strong>.<br>
+          Perangkat tidak akan lagi muncul dalam daftar perangkat ruangan ini.
+        </div>
+        <div class="custom-confirm-buttons">
+          <button class="btn-confirm-secondary" id="ccBtnCancel">Batal</button>
+          <button class="btn-confirm-primary" id="ccBtnConfirm" style="background: linear-gradient(135deg,#e11d48,#FF84BA);">
+            <i class="bi bi-trash3-fill me-1"></i> Ya, Pindahkan
+          </button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add('show'));
+
+    overlay.querySelector('#ccBtnCancel').addEventListener('click', () => {
+        overlay.classList.remove('show');
+        setTimeout(() => overlay.remove(), 260);
+    });
+    overlay.querySelector('#ccBtnConfirm').addEventListener('click', () => {
+        const form = document.getElementById('gudang-form-' + deviceId);
+        if (form) form.submit();
+        overlay.classList.remove('show');
+        setTimeout(() => overlay.remove(), 260);
+    });
+}
+// ── Open Ticket Modal Handler ──────────────────────────────────────────
+const modalRoomsData = @json($allRooms);
+
+document.addEventListener('DOMContentLoaded', function() {
+    const mRoomSelector = document.getElementById('modal_room_selector');
+    const mIssueTypeSelector = document.getElementById('modal_issue_type');
+    const mNetworkBanner = document.getElementById('modal_network_info_banner');
+    const mDeviceRequiredBadge = document.getElementById('modal_device_required_badge');
+    const mBtnSkipDevice = document.getElementById('modal_btn_skip_device');
+    const mDeviceSection = document.getElementById('modal_device_selection_section');
+    const mDevicesContainer = document.getElementById('modal_devices_list_container');
+    const mSelectedRoomTitle = document.getElementById('modal_selected_room_title');
+    const mSelectedDeviceIdInput = document.getElementById('modal_selected_device_id');
+    const mFilterInput = document.getElementById('modal_filter_device_input');
+    const mPreviewBox = document.getElementById('modal_selected_device_preview');
+    const mPreviewTitle = document.getElementById('modal_preview_title');
+    const mPreviewBmn = document.getElementById('modal_preview_bmn');
+    const mPreviewType = document.getElementById('modal_preview_type');
+    const mPreviewIcon = document.getElementById('modal_preview_icon');
+    const mBtnRemoveDevice = document.getElementById('modal_btn_remove_selected_device');
+    const mDescription = document.getElementById('modal_description');
+    const mSubmitBtn = document.getElementById('modal_submit_btn');
+
+    function checkFormValidity() {
+        const hasRoom = mRoomSelector && mRoomSelector.value !== '';
+        const issueType = mIssueTypeSelector ? mIssueTypeSelector.value : '';
+        const hasIssue = issueType !== '';
+        const hasDesc = mDescription && mDescription.value.trim().length >= 5;
+        const hasDevice = mSelectedDeviceIdInput && mSelectedDeviceIdInput.value !== '';
+
+        if (!hasRoom || !hasIssue || !hasDesc) {
+            mSubmitBtn.disabled = true;
+            return;
+        }
+
+        if (issueType === 'jaringan') {
+            // For network issue, device is optional!
+            mSubmitBtn.disabled = false;
+        } else {
+            // For hardware & software, device is mandatory!
+            mSubmitBtn.disabled = !hasDevice;
+        }
+    }
+
+    function handleIssueTypeChange() {
+        const issueType = mIssueTypeSelector.value;
+
+        if (issueType === 'jaringan') {
+            if (mNetworkBanner) mNetworkBanner.classList.remove('d-none');
+            if (mDeviceRequiredBadge) {
+                mDeviceRequiredBadge.innerHTML = '<span class="badge bg-secondary-subtle text-secondary small fw-normal ms-1">Opsional</span>';
+            }
+            if (mBtnSkipDevice) mBtnSkipDevice.classList.remove('d-none');
+            if (mDescription && (!mDescription.value || mDescription.placeholder.includes('perangkat'))) {
+                mDescription.placeholder = 'Contoh: Koneksi LAN/WiFi mati berjamaah...';
+            }
+        } else {
+            if (mNetworkBanner) mNetworkBanner.classList.add('d-none');
+            if (mDeviceRequiredBadge) {
+                mDeviceRequiredBadge.innerHTML = '<span class="text-danger">* (Wajib)</span>';
+            }
+            if (mBtnSkipDevice) mBtnSkipDevice.classList.add('d-none');
+            if (mDescription && mDescription.placeholder.includes('WiFi')) {
+                mDescription.placeholder = 'Jelaskan secara detail kendala yang dialami pada perangkat...';
+            }
+        }
+
+        checkFormValidity();
+    }
+
+    function clearDeviceSelection() {
+        mSelectedDeviceIdInput.value = '';
+        mPreviewBox.classList.add('d-none');
+        document.querySelectorAll('.modal-device-item').forEach(el => {
+            el.classList.remove('border-primary', 'bg-primary-subtle');
+            const btn = el.querySelector('.select-modal-btn');
+            if (btn) {
+                btn.className = 'btn btn-sm btn-outline-primary py-0 px-2 select-modal-btn';
+                btn.innerText = 'Pilih';
+            }
+        });
+        checkFormValidity();
+    }
+
+    if (mBtnRemoveDevice) {
+        mBtnRemoveDevice.addEventListener('click', clearDeviceSelection);
+    }
+    if (mBtnSkipDevice) {
+        mBtnSkipDevice.addEventListener('click', clearDeviceSelection);
+    }
+
+    if (mIssueTypeSelector) {
+        mIssueTypeSelector.addEventListener('change', handleIssueTypeChange);
+    }
+
+    if (mDescription) {
+        mDescription.addEventListener('input', checkFormValidity);
+    }
+
+    if (mRoomSelector) {
+        mRoomSelector.addEventListener('change', function() {
+            const roomId = this.value;
+            const room = modalRoomsData.find(r => r.id == roomId);
+            if (!room) {
+                mDeviceSection.style.display = 'none';
+                return;
+            }
+
+            const devices = room.devices || [];
+            mSelectedRoomTitle.innerText = room.ruang;
+            mDeviceSection.style.display = 'block';
+
+            clearDeviceSelection();
+
+            if (devices.length === 0) {
+                mDevicesContainer.innerHTML = `
+                    <div class="text-center py-3 text-muted">
+                        <small>Tidak ada perangkat terdaftar pada ${room.ruang}.</small>
+                    </div>`;
+                checkFormValidity();
+                return;
+            }
+
+            mDevicesContainer.innerHTML = '';
+            devices.forEach(dev => {
+                const typeName = dev.type ? dev.type.jenis : 'Lainnya';
+                const condName = dev.condition ? dev.condition.kondisi : 'N/A';
+                const condClass = dev.id_condition == 1 ? 'success' : (dev.id_condition == 2 ? 'warning text-dark' : 'danger');
+
+                let iconHtml = '<i class="bi bi-cpu-fill text-secondary"></i>';
+                const lowerType = typeName.toLowerCase();
+                if (lowerType.includes('pc')) iconHtml = '<i class="bi bi-pc-display text-primary"></i>';
+                else if (lowerType.includes('laptop')) iconHtml = '<i class="bi bi-laptop text-primary"></i>';
+                else if (lowerType.includes('printer')) iconHtml = '<i class="bi bi-printer text-success"></i>';
+                else if (lowerType.includes('ups')) iconHtml = '<i class="bi bi-lightning-charge-fill text-warning"></i>';
+                else if (lowerType.includes('scanner')) iconHtml = '<i class="bi bi-camera text-info"></i>';
+                else if (lowerType.includes('tablet')) iconHtml = '<i class="bi bi-tablet text-primary"></i>';
+                else if (lowerType.includes('smartphone') || lowerType.includes('phone') || lowerType.includes('hp')) iconHtml = '<i class="bi bi-phone text-info"></i>';
+                else if (lowerType.includes('viewer') || lowerType.includes('proyektor')) iconHtml = '<i class="bi bi-projector text-secondary"></i>';
+
+                const item = document.createElement('div');
+                item.className = 'p-2 mb-2 rounded border bg-white cursor-pointer modal-device-item d-flex justify-content-between align-items-center';
+                item.style.cursor = 'pointer';
+                item.setAttribute('data-device-id', dev.id);
+                item.setAttribute('data-search', `${dev.brand || ''} ${dev.series || ''} ${dev.id || ''} ${typeName}`.toLowerCase());
+
+                item.innerHTML = `
+                    <div class="d-flex align-items-center">
+                        <div class="device-icon-wrapper p-2 bg-light rounded-3 me-2 text-secondary fs-5 d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px; min-width: 40px;">
+                            ${iconHtml}
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark small">${dev.brand || 'Perangkat'} - ${dev.series || ''}</div>
+                            <small class="text-muted" style="font-size: 0.75rem;">BMN: ${dev.id} | <span class="badge bg-${condClass} py-0 px-1" style="font-size:0.65rem;">${condName}</span></small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2 select-modal-btn" style="font-size: 0.75rem;">
+                        Pilih
+                    </button>
+                `;
+
+                item.addEventListener('click', function() {
+                    mSelectedDeviceIdInput.value = dev.id;
+                    mPreviewTitle.innerText = `${dev.brand || 'Perangkat'} - ${dev.series || ''}`;
+                    mPreviewBmn.innerText = `Kode BMN: ${dev.id} | S/N: ${dev.serial_number || '-'}`;
+                    mPreviewType.innerText = typeName;
+                    mPreviewIcon.innerHTML = iconHtml;
+                    mPreviewBox.classList.remove('d-none');
+
+                    document.querySelectorAll('.modal-device-item').forEach(el => {
+                        const isCurrent = (el.getAttribute('data-device-id') == dev.id);
+                        el.classList.toggle('border-primary', isCurrent);
+                        el.classList.toggle('bg-primary-subtle', isCurrent);
+                        const btn = el.querySelector('.select-modal-btn');
+                        if (btn) {
+                            btn.className = `btn btn-sm ${isCurrent ? 'btn-primary' : 'btn-outline-primary'} py-0 px-2 select-modal-btn`;
+                            btn.innerText = isCurrent ? 'Terpilih' : 'Pilih';
+                        }
+                    });
+
+                    checkFormValidity();
+                });
+
+                mDevicesContainer.appendChild(item);
+            });
+
+            checkFormValidity();
+        });
+
+        if (mFilterInput) {
+            mFilterInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                document.querySelectorAll('.modal-device-item').forEach(item => {
+                    const text = item.getAttribute('data-search') || '';
+                    if (text.includes(query)) {
+                        item.style.setProperty('display', 'flex', 'important');
+                    } else {
+                        item.style.setProperty('display', 'none', 'important');
+                    }
+                });
+            });
+        }
+    }
+});
 </script>
+
+<style>
+/* ── Room-type tab active state ───────────────────────────────────────────── */
+#roomTypeTabs .nav-link {
+    color: var(--text-secondary);
+    background: transparent;
+}
+#roomTypeTabs .nav-link:hover {
+    color: #FF84BA;
+    background: rgba(255,132,186,.06);
+}
+#roomTypeTabs .nav-link.active {
+    color: #FF84BA !important;
+    background: #fff !important;
+    border-color: var(--border-color) var(--border-color) #fff !important;
+    box-shadow: 0 -2px 0 0 #FF84BA inset;
+}
+</style>
 @endsection
+

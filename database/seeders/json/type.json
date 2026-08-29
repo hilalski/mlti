@@ -28,6 +28,10 @@
         "jenis": "Tablet"
     },
     {
+        "id": 8,
+        "jenis": "Smartphone"
+    },
+    {
         "id": 99,
         "jenis": "Tidak Diketahui"
     }

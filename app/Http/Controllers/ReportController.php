@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Device;
 use App\Models\Report;
+use App\Models\Room;
 use App\Models\User;
 use App\Notifications\NewDeviceReport;
 use Illuminate\Http\Request;
@@ -12,16 +13,21 @@ use Illuminate\Support\Facades\Notification;
 
 class ReportController extends Controller
 {
+    public function openTicket(Request $request)
+    {
+        $rooms = Room::with(['devices' => function($q) {
+            $q->with(['type', 'condition']);
+        }])->get();
+
+        $selectedRoomId = $request->query('room_id');
+        $selectedDeviceId = $request->query('device_id');
+
+        return view('report.open-ticket', compact('rooms', 'selectedRoomId', 'selectedDeviceId'));
+    }
+
     public function create($device_id)
     {
-        $device = Device::where('id', $device_id)
-            ->where(function($q) {
-                $q->where('id_user', Auth::user()->nip_lama);
-                if (Auth::user()->id_ruang) {
-                    $q->orWhere('id_user', Auth::user()->id_ruang);
-                }
-            })
-            ->firstOrFail();
+        $device = Device::with(['type', 'condition', 'room', 'user'])->findOrFail($device_id);
 
         return view('report.create', compact('device'));
     }
@@ -29,37 +35,42 @@ class ReportController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'device_id' => 'required|exists:devices,id',
             'issue_type' => 'required|in:hardware,software,jaringan',
+            'room_id' => 'nullable|exists:rooms,id',
+            'device_id' => 'nullable|exists:devices,id',
             'description' => 'required|string|min:5',
         ]);
 
-        $device = Device::where('id', $request->device_id)
-            ->where(function($q) {
-                $q->where('id_user', Auth::user()->nip_lama);
-                if (Auth::user()->id_ruang) {
-                    $q->orWhere('id_user', Auth::user()->id_ruang);
-                }
-            })
-            ->firstOrFail();
+        // If issue_type is not 'jaringan', device_id is strictly required
+        if ($request->issue_type !== 'jaringan' && empty($request->device_id)) {
+            return back()->withErrors(['device_id' => 'Perangkat wajib dipilih untuk kendala hardware dan software.'])->withInput();
+        }
 
-        // Check if there is already an active report for this device
-        $activeReport = $device->activeReport();
-        if ($activeReport) {
-            return redirect()->route('dashboard')->with('error', 'Perangkat ini sedang dalam proses perbaikan.');
+        $deviceId = $request->device_id ?: null;
+        $roomId = $request->room_id ?: null;
+
+        if ($deviceId) {
+            $device = Device::findOrFail($deviceId);
+            // Check if there is already an active report for this device
+            $activeReport = $device->activeReport();
+            if ($activeReport) {
+                return redirect()->route('dashboard')->with('error', 'Perangkat ini sedang dalam proses perbaikan (Tiket aktif sudah ada).');
+            }
+            // If room_id was not explicitly passed, infer from device's room if available
+            if (!$roomId && $device->id_user && is_numeric($device->id_user) && $device->id_user < 100) {
+                $roomId = $device->id_user;
+            }
         }
 
         // Create Report
         $report = Report::create([
-            'device_id' => $device->id,
+            'device_id' => $deviceId,
+            'id_ruang' => $roomId,
             'reported_by' => Auth::user()->nip_lama,
             'issue_type' => $request->issue_type,
             'description' => $request->description,
             'status' => 'menunggu',
         ]);
-
-        // Optional: Update device condition to 'Rusak Ringan' (2) or similar if needed,
-        // but we can leave it as is or update it based on requirements.
 
         // Notify Jarkom users
         $jarkomUsers = User::where('is_jarkom', 1)->get();
@@ -67,23 +78,16 @@ class ReportController extends Controller
             Notification::send($jarkomUsers, new NewDeviceReport($report));
         }
 
-        return redirect()->route('dashboard')->with('success', 'Laporan kerusakan berhasil dikirim!');
+        return redirect()->route('dashboard')->with('success', 'Laporan tiket kendala berhasil dibuat!');
     }
 
     public function status($device_id)
     {
-        $device = Device::where('id', $device_id)
-            ->where(function($q) {
-                $q->where('id_user', Auth::user()->nip_lama);
-                if (Auth::user()->id_ruang) {
-                    $q->orWhere('id_user', Auth::user()->id_ruang);
-                }
-            })
-            ->firstOrFail();
+        $device = Device::with(['type', 'condition', 'room', 'user'])->findOrFail($device_id);
 
         // Get all reports for this device, latest first
         $reports = Report::where('device_id', $device_id)
-            ->with(['technician', 'vendor'])
+            ->with(['technician', 'vendor', 'reporter'])
             ->latest()
             ->get();
 

@@ -88,61 +88,87 @@
     <div class="col-lg-7 col-md-12">
       <div class="card shadow-sm border-0 mb-4 h-100">
         <div class="card-header d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #FF84BA, #99C2FF) !important; padding: 15px 20px !important; margin: -24px -24px 20px -24px !important; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom: none !important;">
-          <h5 class="card-title my-0 text-white"><i class="bi bi-journal-text me-1"></i> Riwayat Kerusakan & Perbaikan</h5>
-          <a href="{{ route('dashboard') }}" class="btn btn-sm btn-light" style="color: #FF84BA !important; border: none !important; font-weight: 600;"><i class="bi bi-arrow-left"></i> Kembali</a>
+          <h5 class="card-title my-0 text-white"><i class="bi bi-journal-text me-1"></i> Riwayat Perbaikan</h5>
+          <a href="{{ route('dashboard') }}" class="btn btn-sm btn-light" style="color: #FF84BA !important; border: none !important; font-weight: 600;">Kembali</a>
         </div>
-        <div class="card-body pt-3">
-          
-          @forelse($reports as $report)
-            <div class="pb-4 mb-4" style="border-bottom: 2px dashed #ffd4e5 !important;">
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <div>
-                  <span class="badge bg-{{ $report->status == 'menunggu' ? 'secondary' : ($report->status == 'diproses' ? 'primary' : ($report->status == 'selesai' ? 'success' : 'danger')) }} py-1 px-2 small">
-                    {{ ucfirst($report->status) }}
-                  </span>
-                  <span class="badge badge-{{ $report->issue_type }} ms-1">{{ ucfirst($report->issue_type) }}</span>
-                </div>
-                <span class="text-muted small">{{ $report->created_at->format('d M Y, H:i') }}</span>
-              </div>
+        <div class="card-body p-0 pt-3">
 
-              <!-- Issue desc -->
-              <div class="p-3 rounded mb-3 border-start border-3 small text-dark" style="background: #fffdfd; border-color: #FF84BA !important; border-left-width: 4px !important; border-top: 1px solid #fdf5f9; border-right: 1px solid #fdf5f9; border-bottom: 1px solid #fdf5f9;">
-                <span class="fw-bold d-block mb-1" style="color: var(--text-primary);">Kendala yang Dilaporkan:</span>
-                <span style="white-space: pre-line;">{{ $report->description }}</span>
-              </div>
+          @if($reports->count() > 0)
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-light border-bottom">
+                  <tr>
+                    <th class="ps-3" style="width: 36px;">#</th>
+                    <th>Status</th>
+                    <th class="d-none d-sm-table-cell">Jenis</th>
+                    <th class="d-none d-md-table-cell">Deskripsi</th>
+                    <th class="d-none d-sm-table-cell">Tanggal</th>
+                    <th class="text-center pe-3">Detail</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($reports->sortByDesc('created_at') as $i => $report)
+                    @php
+                      $statusConf = match($report->status) {
+                        'menunggu' => ['color' => 'warning text-dark', 'icon' => 'bi-clock', 'label' => 'Menunggu'],
+                        'diproses' => ['color' => 'primary',           'icon' => 'bi-wrench-adjustable', 'label' => 'Diproses'],
+                        'selesai'  => ['color' => 'success',           'icon' => 'bi-check-circle', 'label' => 'Selesai'],
+                        'ditolak'  => ['color' => 'danger',            'icon' => 'bi-x-circle', 'label' => 'Ditolak'],
+                        default    => ['color' => 'secondary',         'icon' => 'bi-circle', 'label' => ucfirst($report->status)],
+                      };
+                    @endphp
+                    <tr>
+                      <td class="ps-3 text-muted small">{{ $i + 1 }}</td>
 
-              @if($report->status !== 'menunggu')
-                <div class="p-3 border rounded bg-white small" style="border-left: 4px solid #FF84BA !important; border-color: var(--border-color) !important;">
-                  <div class="row g-2">
-                    <div class="col-sm-6">
-                      <span class="text-muted d-block" style="font-size: 0.75rem;">Teknisi Penanggung Jawab</span>
-                      <strong class="text-dark" style="color: var(--text-primary) !important;">{{ $report->technician->name ?? 'N/A' }}</strong>
-                    </div>
-                    @if($report->id_vendor)
-                      <div class="col-sm-6">
-                        <span class="text-muted d-block" style="font-size: 0.75rem;">Vendor Rujukan</span>
-                        <strong class="text-dark" style="color: var(--text-primary) !important;">{{ $report->vendor->vendor_service ?? 'N/A' }}</strong>
-                      </div>
-                    @endif
-                    <div class="col-12 mt-2 pt-2 border-top" style="border-top: 1px dashed var(--border-color) !important;">
-                      <span class="text-muted d-block" style="font-size: 0.75rem;">Tindakan / Solusi Teknisi</span>
-                      <span class="fw-semibold" style="white-space: pre-line; color: var(--text-primary) !important;">{{ $report->technician_notes ?: 'Belum ada catatan solusi.' }}</span>
-                    </div>
-                  </div>
-                </div>
-              @else
-                <div class="alert alert-light py-2 px-3 border mb-0 small text-muted">
-                  <i class="bi bi-clock me-1"></i> Laporan ini sedang dalam antrian penugasan teknisi.
-                </div>
-              @endif
+                      {{-- Status --}}
+                      <td>
+                        
+                        {{-- Mobile stacked info --}}
+                        <div class="d-flex flex-wrap gap-1 mt-1 d-sm-none">
+                          <span class="text-muted" style="font-size: 0.68rem;"><i class="bi bi-calendar3 me-1"></i>{{ $report->created_at->format('d M Y') }}</span>
+                          <span class="badge badge-{{ $report->issue_type }}" style="font-size: 0.65rem;">{{ ucfirst($report->issue_type) }}</span>
+                        </div>
+                        <span class="badge bg-{{ $statusConf['color'] }} py-1 px-2">
+                          {{ $statusConf['label'] }}
+                        </span>
+                      </td>
 
+                      {{-- Issue type --}}
+                      <td class="d-none d-sm-table-cell">
+                        <span class="badge badge-{{ $report->issue_type }}">{{ ucfirst($report->issue_type) }}</span>
+                      </td>
+
+                      {{-- Description preview --}}
+                      <td class="d-none d-md-table-cell small text-secondary" style="max-width: 200px;">
+                        {{ Str::limit($report->description, 45) }}
+                      </td>
+
+                      {{-- Date --}}
+                      <td class="d-none d-sm-table-cell small text-muted text-nowrap">
+                        {{ $report->created_at->format('d M Y, H:i') }}
+                      </td>
+
+                      {{-- View detail button --}}
+                      <td class="text-center pe-3">
+                        <button type="button"
+                          class="btn btn-sm btn-outline-primary py-1 px-2"
+                          title="Lihat Detail"
+                          data-bs-toggle="modal"
+                          data-bs-target="#dashReportDetailModal{{ $report->id }}">
+                          <i class="bi bi-eye-fill"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
             </div>
-          @empty
+          @else
             <div class="text-center py-5 text-muted">
-              <i class="bi bi-clipboard-x fs-1 d-block mb-2"></i>
-              <span>Belum ada riwayat pelaporan kerusakan pada perangkat ini.</span>
+              <i class="bi bi-clipboard-x fs-1 d-block mb-2 opacity-50"></i>
+              <span class="small">Belum ada riwayat pelaporan kerusakan pada perangkat ini.</span>
             </div>
-          @endforelse
+          @endif
 
         </div>
       </div>
@@ -150,4 +176,107 @@
 
   </div>
 </section>
+
+{{-- ── Detail Modals for Each Report ── --}}
+@foreach($reports as $report)
+  @php
+    $statusConf = match($report->status) {
+      'menunggu' => ['color' => 'warning text-dark', 'icon' => 'bi-clock',            'label' => 'Menunggu Konfirmasi'],
+      'diproses' => ['color' => 'primary',           'icon' => 'bi-wrench-adjustable','label' => 'Sedang Diproses'],
+      'selesai'  => ['color' => 'success',           'icon' => 'bi-check-circle',     'label' => 'Perbaikan Selesai'],
+      'ditolak'  => ['color' => 'danger',            'icon' => 'bi-x-circle',         'label' => 'Laporan Ditolak'],
+      default    => ['color' => 'secondary',         'icon' => 'bi-circle',           'label' => ucfirst($report->status)],
+    };
+  @endphp
+
+  <div class="modal fade" id="dashReportDetailModal{{ $report->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content" style="border-radius: 16px; overflow: hidden;">
+
+        {{-- Modal Header --}}
+        <div class="modal-header text-white" style="background: linear-gradient(135deg, #FF84BA, #99C2FF); border-bottom: none;">
+          <div>
+            <h5 class="modal-title fw-bold mb-0">
+              <i class="bi bi-ticket-detailed-fill me-2"></i>Detail Tiket #{{ $report->id }}
+            </h5>
+            <small class="opacity-75" style="font-size: 0.78rem;">{{ $report->created_at->format('d M Y, H:i') }}</small>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+
+        {{-- Modal Body --}}
+        <div class="modal-body p-4">
+
+          {{-- Badges --}}
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            <span class="badge bg-{{ $statusConf['color'] }} py-2 px-3 fw-bold">
+              <i class="bi {{ $statusConf['icon'] }} me-1"></i>{{ $statusConf['label'] }}
+            </span>
+            <span class="badge badge-{{ $report->issue_type }} py-2 px-3 fw-bold">
+              {{ ucfirst($report->issue_type) }}
+            </span>
+          </div>
+
+          {{-- Problem Description --}}
+          <div class="mb-3 p-3 rounded-3 border-start border-4 border-danger-subtle small"
+               style="background: #fffdfd; border-color: #FF84BA !important; border-top: 1px solid #fdf5f9; border-right: 1px solid #fdf5f9; border-bottom: 1px solid #fdf5f9;">
+            <strong class="d-block mb-1 text-dark" style="font-size: 0.8rem;">
+              <i class="bi bi-chat-left-text-fill me-1" style="color: #FF84BA;"></i> Kendala yang Dilaporkan:
+            </strong>
+            <p class="mb-0 text-dark" style="white-space: pre-line; line-height: 1.5;">{{ $report->description }}</p>
+          </div>
+
+          {{-- Technician Section --}}
+          @if($report->status !== 'menunggu')
+            <hr class="my-3" style="border-color: #fdf5f9;">
+            <div class="row g-3">
+
+              @if($report->handled_by)
+                <div class="col-sm-6">
+                  <div class="small text-muted mb-1"><i class="bi bi-person-workspace me-1" style="color: #FF84BA;"></i> Teknisi Penanggung Jawab</div>
+                  <div class="fw-bold text-dark small">{{ $report->technician->name ?? 'N/A' }}</div>
+                </div>
+              @endif
+
+              @if($report->id_vendor)
+                <div class="col-sm-6">
+                  <div class="small text-muted mb-1"><i class="bi bi-building me-1" style="color: #99C2FF;"></i> Vendor Rujukan</div>
+                  <div class="fw-bold text-dark small">{{ $report->vendor->vendor_service ?? 'N/A' }}</div>
+                </div>
+              @endif
+
+              <div class="col-12">
+                <div class="small text-muted mb-1"><i class="bi bi-journal-text me-1" style="color: #FF84BA;"></i> Tindakan / Solusi Teknisi</div>
+                <div class="p-2 rounded-2 bg-light border small text-dark" style="white-space: pre-line; min-height: 48px; line-height: 1.5;">
+                  {{ $report->technician_notes ?: 'Belum ada catatan solusi.' }}
+                </div>
+              </div>
+
+              @if($report->resolved_at)
+                <div class="col-12 text-end">
+                  <small class="text-muted"><i class="bi bi-check2-all me-1 text-success"></i>
+                    Diselesaikan: <strong>{{ $report->resolved_at->format('d M Y, H:i') }}</strong>
+                  </small>
+                </div>
+              @endif
+
+            </div>
+          @else
+            <div class="alert alert-info py-2 px-3 mb-0 small border-0" style="background: rgba(153,194,255,0.12); border-radius: 10px;">
+              <i class="bi bi-info-circle me-1 text-primary"></i>
+              Laporan ini sedang dalam antrian penugasan teknisi.
+            </div>
+          @endif
+
+        </div>
+
+        {{-- Modal Footer --}}
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-secondary btn-sm px-4" data-bs-dismiss="modal">Tutup</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+@endforeach
 @endsection

@@ -24,10 +24,10 @@
         </div>
 
         <div class="card-body pt-3">
-          
+
           <!-- Search and Multi-Criteria Filters -->
-          <form method="GET" action="{{ route('admin.devices.index') }}" class="row g-3 mb-4 p-3 bg-light rounded align-items-end">
-            <div class="col-md-3">
+          <form method="GET" action="{{ route('admin.devices.index') }}" class="row g-2 mb-4 p-3 bg-light rounded align-items-end">
+            <div class="col-12 col-md-3">
               <label for="search" class="form-label small fw-bold text-dark">Cari Perangkat</label>
               <div class="input-group">
                 <span class="input-group-text bg-white"><i class="bi bi-search text-secondary"></i></span>
@@ -35,7 +35,7 @@
               </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-6 col-md-3">
               <label for="type_id" class="form-label small fw-bold text-dark">Tipe</label>
               <select name="type_id" id="type_id" class="form-select form-select-sm">
                 <option value="">-- Semua Tipe --</option>
@@ -47,10 +47,10 @@
               </select>
             </div>
 
-            <div class="col-md-2">
+            <div class="col-6 col-md-2">
               <label for="condition_id" class="form-label small fw-bold text-dark">Kondisi</label>
               <select name="condition_id" id="condition_id" class="form-select form-select-sm">
-                <option value="">-- Semua Kondisi --</option>
+                <option value="">-- Semua --</option>
                 @foreach($conditions as $cond)
                   <option value="{{ $cond->id }}" {{ request('condition_id') == $cond->id ? 'selected' : '' }}>
                     {{ $cond->kondisi }}
@@ -59,10 +59,10 @@
               </select>
             </div>
 
-            <div class="col-md-2">
+            <div class="col-6 col-md-2">
               <label for="room_id" class="form-label small fw-bold text-dark">Ruangan</label>
               <select name="room_id" id="room_id" class="form-select form-select-sm">
-                <option value="">-- Semua Ruangan --</option>
+                <option value="">-- Semua --</option>
                 @foreach($rooms as $room)
                   <option value="{{ $room->id }}" {{ request('room_id') == $room->id ? 'selected' : '' }}>
                     {{ $room->ruang }}
@@ -71,63 +71,86 @@
               </select>
             </div>
 
-            <div class="col-md-2 d-flex gap-1">
+            <div class="col-6 col-md-2 d-flex gap-1">
               <button type="submit" class="btn btn-primary btn-sm flex-grow-1"><i class="bi bi-funnel"></i> Filter</button>
-              <a href="{{ route('admin.devices.index') }}" class="btn btn-secondary btn-sm"><i class="bi bi-arrow-counterclockwise"></i> Reset</a>
+              <a href="{{ route('admin.devices.index') }}" class="btn btn-secondary btn-sm"><i class="bi bi-arrow-counterclockwise"></i></a>
             </div>
           </form>
 
           <div class="table-responsive">
-            <table class="table table-hover align-middle">
+            <table class="table table-hover align-middle mb-0">
               <thead class="table-light">
                 <tr>
-                  <th scope="col">Kode BMN</th>
-                  <th scope="col">Kategori</th>
-                  <th scope="col">Merek & Seri</th>
-                  <th scope="col">No Seri</th>
-                  <th scope="col">Kondisi</th>
-                  <th scope="col">Pemilik</th>
+                  <th scope="col">Perangkat</th>
+                  <th scope="col" class="d-none d-sm-table-cell">Tipe</th>
+                  <th scope="col" class="d-none d-md-table-cell">No. Seri</th>
+                  <th scope="col" class="d-none d-sm-table-cell">Kondisi</th>
+                  <th scope="col" class="d-none d-lg-table-cell">Pemilik</th>
                   <th scope="col" class="text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 @forelse($devices as $d)
                   <tr>
-                    <td class="fw-bold text-dark small">{{ $d->id }}</td>
-                    <td>
+                    {{-- Device identifier – always visible --}}
+                    <td style="max-width: 200px;">
+                      <div class="fw-bold text-dark" style="font-size: 0.875rem; line-height: 1.2;">{{ $d->brand }} {{ $d->series }}</div>
+                      <small class="text-muted d-block" style="font-size: 0.7rem;">{{ $d->id }}</small>
+                      {{-- Mobile stacks: type + kondisi + owner inline --}}
+                      <div class="d-flex flex-wrap gap-1 mt-1 d-sm-none">
+                        <span class="badge bg-light text-primary border border-primary-subtle px-1 py-0" style="font-size: 0.65rem;">{{ $d->type->jenis ?? 'Lainnya' }}</span>
+                        <span class="badge bg-{{ $d->id_condition == 1 ? 'success' : ($d->id_condition == 2 ? 'warning text-dark' : 'danger') }} px-1" style="font-size: 0.65rem;">{{ $d->condition->kondisi ?? 'N/A' }}</span>
+                      </div>
+                      <div class="d-lg-none d-none d-sm-block mt-1">
+                        @if($d->user)
+                          <small style="color:#FF84BA; font-size:0.72rem;"><i class="bi bi-person-fill me-1"></i>{{ $d->user->name }}</small>
+                        @elseif($d->room)
+                          <small style="color:#99C2FF; font-size:0.72rem;"><i class="bi bi-house-door-fill me-1"></i>{{ $d->room->ruang }}</small>
+                        @else
+                          <small class="text-muted" style="font-size:0.72rem;"><i class="bi bi-box-seam me-1"></i>Gudang</small>
+                        @endif
+                      </div>
+                    </td>
+
+                    {{-- Type --}}
+                    <td class="d-none d-sm-table-cell">
                       <span class="badge bg-light text-primary border border-primary-subtle px-2 py-1 small fw-bold">
                         {{ $d->type->jenis ?? 'Lainnya' }}
                       </span>
                     </td>
-                    <td>
-                      <div class="fw-bold text-dark small">{{ $d->brand }}</div>
-                      <small class="text-muted" style="font-size: 0.75rem;">Seri: {{ $d->series }}</small>
-                    </td>
-                    <td class="small">{{ $d->serial_number ?: '-' }}</td>
-                    <td>
-                      <span class="badge bg-{{ $d->id_condition == 1 ? 'success' : ($d->id_condition == 2 ? 'warning text-dark' : 'danger') }} px-2.5 py-1 text-white">
+
+                    {{-- Serial number --}}
+                    <td class="d-none d-md-table-cell small">{{ $d->serial_number ?: '-' }}</td>
+
+                    {{-- Condition --}}
+                    <td class="d-none d-sm-table-cell">
+                      <span class="badge bg-{{ $d->id_condition == 1 ? 'success' : ($d->id_condition == 2 ? 'warning text-dark' : 'danger') }} px-2 py-1">
                         {{ $d->condition->kondisi ?? 'N/A' }}
                       </span>
                     </td>
-                    <td>
+
+                    {{-- Owner --}}
+                    <td class="d-none d-lg-table-cell">
                       @if($d->user)
-                        <div class="fw-bold" style="color: #FF84BA;">{{ $d->user->name }}</div>
+                        <div class="fw-bold small" style="color: #FF84BA;">{{ $d->user->name }}</div>
                       @elseif($d->room)
-                        <div class="fw-bold" style="color: #99C2FF;">{{ $d->room->ruang }}</div>
+                        <div class="fw-bold small" style="color: #99C2FF;">{{ $d->room->ruang }}</div>
                       @else
-                        <span class="text-muted small">Tidak Ada (Gudang)</span>
+                        <span class="text-muted small">Gudang</span>
                       @endif
                     </td>
-                    <td class="text-center">
+
+                    {{-- Actions --}}
+                    <td class="text-center text-nowrap">
                       <div class="d-flex justify-content-center gap-1">
-                        <a href="{{ route('admin.devices.edit', $d->id) }}" class="btn btn-sm btn-outline-primary py-1 px-2.5">
-                          <i class="bi bi-pencil-square"></i> Edit
+                        <a href="{{ route('admin.devices.edit', $d->id) }}" class="btn btn-sm btn-outline-primary py-1 px-2" title="Edit">
+                          <i class="bi bi-pencil-square"></i>
                         </a>
                         <form action="{{ route('admin.devices.destroy', $d->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus perangkat TI ini?');">
                           @csrf
                           @method('DELETE')
-                          <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-2.5">
-                            <i class="bi bi-trash-fill"></i> Hapus
+                          <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-2" title="Hapus">
+                            <i class="bi bi-trash-fill"></i>
                           </button>
                         </form>
                       </div>
@@ -135,7 +158,7 @@
                   </tr>
                 @empty
                   <tr>
-                    <td colspan="7" class="text-center py-4 text-muted">
+                    <td colspan="6" class="text-center py-4 text-muted">
                       <i class="bi bi-laptop fs-2 d-block mb-2"></i>
                       Tidak ada perangkat TI yang cocok dengan kriteria pencarian.
                     </td>

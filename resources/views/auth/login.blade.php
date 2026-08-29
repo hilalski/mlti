@@ -12,7 +12,9 @@
   <link href="{{ asset('favicon.ico') }}" rel="icon">
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -24,108 +26,157 @@
 
   <style>
     body {
-      background: linear-gradient(135deg, #000957 0%, #172554 50%, #0c1236 100%);
+      font-family: 'Plus Jakarta Sans', 'Nunito', sans-serif;
+      background-color: #f6f9fc;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       overflow-x: hidden;
+      overflow-y: auto;
+      padding: 30px 10px;
     }
 
-    /* Abstract shapes background */
-    .bg-circle-1 {
-      position: absolute;
+    /* Abstract soft blurred blobs background */
+    .bg-blob-1 {
+      position: fixed;
       width: 500px;
       height: 500px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(52, 76, 183, 0.15) 0%, rgba(52, 76, 183, 0) 70%);
+      background: radial-gradient(circle, rgba(255, 132, 186, 0.35) 0%, rgba(255, 132, 186, 0) 70%);
       top: -10%;
       left: -10%;
       z-index: 0;
+      filter: blur(80px);
+      animation: float-blob-1 25s ease-in-out infinite alternate;
     }
 
-    .bg-circle-2 {
-      position: absolute;
-      width: 600px;
-      height: 600px;
+    .bg-blob-2 {
+      position: fixed;
+      width: 550px;
+      height: 550px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 235, 0, 0.05) 0%, rgba(255, 235, 0, 0) 70%);
+      background: radial-gradient(circle, rgba(153, 194, 255, 0.4) 0%, rgba(153, 194, 255, 0) 70%);
       bottom: -15%;
       right: -10%;
       z-index: 0;
+      filter: blur(90px);
+      animation: float-blob-2 30s ease-in-out infinite alternate;
+    }
+
+    .bg-blob-3 {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 132, 186, 0.2) 0%, rgba(255, 132, 186, 0) 75%);
+      top: 50%;
+      left: 60%;
+      z-index: 0;
+      filter: blur(70px);
+      animation: float-blob-3 22s ease-in-out infinite alternate;
+    }
+
+    @keyframes float-blob-1 {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(60px, 40px) scale(1.05); }
+      100% { transform: translate(-20px, 60px) scale(0.95); }
+    }
+
+    @keyframes float-blob-2 {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-50px, -60px) scale(0.95); }
+      100% { transform: translate(40px, -30px) scale(1.05); }
+    }
+
+    @keyframes float-blob-3 {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, -20px) scale(1.1); }
+      100% { transform: translate(-30px, 30px) scale(0.95); }
     }
 
     .login-container {
       position: relative;
       z-index: 10;
       width: 100%;
-      max-width: 520px;
-      padding: 15px;
+      max-width: 490px;
+      padding: 20px;
     }
 
     .login-card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(15px);
-      border: none;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(35px) saturate(180%);
+      -webkit-backdrop-filter: blur(35px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.06), 0 0 40px rgba(153, 194, 255, 0.12);
       overflow: hidden;
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .login-card:hover {
+      box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.08), 0 0 50px rgba(255, 132, 186, 0.15);
     }
 
     .login-card-header {
-      background-color: var(--color-primary);
-      padding: 30px 20px;
+      padding: 40px 30px 20px 30px;
       text-align: center;
-      border-bottom: 5px solid var(--color-accent);
-      position: relative;
-    }
-
-    .login-card-header::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 100%;
-      height: 5px;
-      background: linear-gradient(90deg, var(--color-accent) 0%, #ffd700 100%);
+      background: transparent;
+      border-bottom: none;
     }
 
     .logo-title {
-      font-size: 2.2rem;
-      font-weight: 850;
-      letter-spacing: 1px;
-      background: linear-gradient(135deg, #ffffff 0%, var(--color-accent) 100%);
+      font-size: 2.3rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #FF84BA 0%, #99C2FF 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
+    }
+
+    .logo-subtitle {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #718096;
+      text-transform: uppercase;
+      margin-bottom: 0;
+    }
+
+    .scanner-outer-wrapper {
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.01);
     }
 
     .scanner-wrapper {
       position: relative;
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0, 9, 87, 0.15);
-      border: 3px solid var(--color-primary);
-      transition: border-color 0.3s ease;
+      border: 1px solid rgba(255, 132, 186, 0.2);
+      box-shadow: 0 10px 30px rgba(153, 194, 255, 0.05);
+      transition: all 0.4s ease;
     }
 
     .scanner-wrapper.scanning {
-      border-color: var(--color-secondary);
+      border-color: #FF84BA;
+      box-shadow: 0 0 20px rgba(255, 132, 186, 0.2);
     }
 
-    /* Laser scan line animation */
     .scan-line {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 4px;
-      background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+      background: linear-gradient(90deg, transparent, #FF84BA 30%, #99C2FF 70%, transparent);
       z-index: 100;
-      animation: scan 2s linear infinite;
-      box-shadow: 0 0 8px var(--color-accent);
+      animation: scan 3s ease-in-out infinite;
+      box-shadow: 0 0 10px rgba(255, 132, 186, 0.4);
     }
 
     @keyframes scan {
@@ -134,46 +185,303 @@
       100% { top: 0%; }
     }
 
+    .scanner-corner {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      z-index: 99;
+      pointer-events: none;
+    }
+    .corner-tl { top: 10px; left: 10px; border-top-color: #FF84BA; border-left-color: #FF84BA; border-top-left-radius: 6px; }
+    .corner-tr { top: 10px; right: 10px; border-top-color: #99C2FF; border-right-color: #99C2FF; border-top-right-radius: 6px; }
+    .corner-bl { bottom: 10px; left: 10px; border-bottom-color: #99C2FF; border-left-color: #99C2FF; border-bottom-left-radius: 6px; }
+    .corner-br { bottom: 10px; right: 10px; border-bottom-color: #FF84BA; border-right-color: #FF84BA; border-bottom-right-radius: 6px; }
+
+    .accordion-item {
+      background: rgba(255, 255, 255, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 14px !important;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .accordion-item:hover {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .accordion-button {
+      background: transparent !important;
+      color: #4a5568 !important;
+      box-shadow: none !important;
+      font-size: 0.85rem;
+      padding: 16px 20px;
+      border: none;
+      transition: color 0.3s ease;
+    }
+
     .accordion-button:not(.collapsed) {
-      background-color: #f0f4ff;
-      color: var(--color-secondary);
+      color: #FF84BA !important;
+      font-weight: 600;
+    }
+
+    .accordion-button::after {
+      background-size: 0.85rem;
+      filter: grayscale(1) opacity(0.6);
+      transition: transform 0.2s ease;
+    }
+
+    .accordion-button:not(.collapsed)::after {
+      filter: none;
+    }
+
+    .accordion-body {
+      background: rgba(255, 255, 255, 0.3);
+      border-top: 1px solid rgba(255, 255, 255, 0.5);
+      padding: 20px;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #4a5568;
+      font-size: 0.8rem;
+      margin-bottom: 6px;
+      letter-spacing: 0.2px;
+    }
+
+    .input-group {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.01);
+      transition: all 0.3s ease;
+    }
+
+    .input-group:focus-within {
+      border-color: #99C2FF;
+      box-shadow: 0 0 0 4px rgba(153, 194, 255, 0.2);
+    }
+
+    .input-group-text {
+      background-color: #fff !important;
+      border: none;
+      color: #a0aec0;
+      padding-left: 16px;
+    }
+
+    .form-control {
+      border: none !important;
+      padding: 12px 16px 12px 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #2d3748;
+      background-color: #fff !important;
     }
 
     .form-control:focus {
-      border-color: var(--color-secondary);
-      box-shadow: 0 0 0 0.25rem rgba(52, 76, 183, 0.25);
+      box-shadow: none !important;
+    }
+
+    .form-control::placeholder {
+      color: #cbd5e0;
     }
 
     .btn-manual-verify {
-      background-color: var(--color-secondary);
+      background: linear-gradient(135deg, #FF84BA 0%, #99C2FF 100%);
       border: none;
+      border-radius: 12px;
+      color: white;
       font-weight: 600;
-      transition: all 0.2s ease;
+      padding: 12px;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 15px rgba(255, 132, 186, 0.25);
     }
 
     .btn-manual-verify:hover {
-      background-color: var(--color-primary);
-      color: var(--color-accent);
+      background: linear-gradient(135deg, #FF6EA7 0%, #76A6FF 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 132, 186, 0.35);
+      color: white;
+    }
+
+    .btn-manual-verify:active {
+      transform: translateY(1px);
+    }
+
+    .alert {
+      border-radius: 14px;
+      border: none;
+      font-size: 0.85rem;
+      padding: 12px 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.01);
+    }
+    
+    .alert-info {
+      background-color: rgba(153, 194, 255, 0.15) !important;
+      color: #2b6cb0;
+    }
+
+    .alert-success {
+      background-color: rgba(72, 187, 120, 0.15) !important;
+      color: #22543d;
+    }
+
+    .alert-danger {
+      background-color: rgba(245, 101, 101, 0.15) !important;
+      color: #742a2a;
+    }
+
+    #reader {
+      border: none !important;
+      background: #fafbfe !important;
+    }
+    
+    #reader__dashboard {
+      padding: 15px !important;
+      background: #fafbfe !important;
+      border-top: 1px solid rgba(0,0,0,0.03) !important;
+    }
+
+    #reader__camera_selection {
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.08);
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      background-color: #fff;
+      color: #4a5568;
+    }
+
+    #reader__dashboard_section_csr button {
+      background: linear-gradient(135deg, #FF84BA 0%, #99C2FF 100%);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(255, 132, 186, 0.2);
+    }
+
+    #reader__dashboard_section_csr button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 12px rgba(255, 132, 186, 0.3);
+    }
+    
+    #reader video {
+      object-fit: cover !important;
+      border-radius: 14px;
+      display: block;
+      width: 100%;
+      min-height: 250px;
+      background: #101828;
+    }
+
+    .scanner-actions {
+      padding: 12px 10px 0;
+    }
+
+    .camera-focus-controls {
+      padding: 12px 10px 2px;
+    }
+
+    .btn-focus {
+      border: 1px solid rgba(153, 194, 255, 0.75);
+      border-radius: 8px;
+      background: #fff;
+      color: #4a6fa5;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 7px 10px;
+    }
+
+    .btn-focus:hover:not(:disabled) {
+      background: #eef5ff;
+      color: #31598d;
+    }
+
+    .focus-status {
+      color: #718096;
+      font-size: 0.72rem;
+      text-align: right;
+    }
+
+    .manual-focus-control {
+      margin-top: 10px;
+    }
+
+    .manual-focus-control .form-label {
+      font-size: 0.72rem;
+    }
+
+    .footer-text {
+      color: #a0aec0;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-top: 24px;
+      letter-spacing: 0.2px;
+    }
+
+    /* Responsiveness tweaks for smaller mobile screens and keyboard overlay compatibility */
+    @media (max-width: 480px) {
+      body {
+        padding: 15px 5px;
+      }
+      .login-container {
+        padding: 10px;
+      }
+      .login-card {
+        border-radius: 20px;
+      }
+      .login-card-header {
+        padding: 30px 20px 15px 20px;
+      }
+      .logo-title {
+        font-size: 1.9rem;
+      }
+      .card-body {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+        padding-bottom: 20px !important;
+      }
+      .scanner-outer-wrapper {
+        padding: 6px;
+        border-radius: 16px;
+      }
+      .scanner-wrapper {
+        border-radius: 12px;
+      }
+      .scanner-corner {
+        width: 15px;
+        height: 15px;
+      }
+      .corner-tl { top: 6px; left: 6px; }
+      .corner-tr { top: 6px; right: 6px; }
+      .corner-bl { bottom: 6px; left: 6px; }
+      .corner-br { bottom: 6px; right: 6px; }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="bg-circle-1"></div>
-  <div class="bg-circle-2"></div>
+  <div class="bg-blob-1"></div>
+  <div class="bg-blob-2"></div>
+  <div class="bg-blob-3"></div>
 
   <div class="login-container">
 
     <div class="card login-card">
       
-      <!-- Premium Header -->
+      <!-- Modern Minimalist Header -->
       <div class="login-card-header">
-        <h1 class="logo-title">MLTI-REPORT</h1>
-        <p class="text-white-50 mb-0 small uppercase fw-bold" style="letter-spacing: 2px;">BPS Provinsi Jambi</p>
+        <h1 class="logo-title">MLTI</h1>
+        <p class="logo-subtitle">BPS Provinsi Jambi</p>
       </div>
 
-      <div class="card-body p-4 pt-5">
+      <div class="card-body px-4 pb-4 pt-2">
         
         <div class="text-center mb-4">
           <h5 class="fw-bold text-dark mb-1">Masuk dengan QR Code</h5>
@@ -181,15 +489,38 @@
         </div>
 
         <!-- QR Scanner Region -->
-        <div class="mb-4 position-relative">
-          <div class="scan-line"></div>
-          <div class="scanner-wrapper">
-            <div id="reader" style="width: 100%;"></div>
+        <div class="mb-4 scanner-outer-wrapper">
+          <div class="position-relative">
+            <div class="scan-line"></div>
+            <div class="scanner-corner corner-tl"></div>
+            <div class="scanner-corner corner-tr"></div>
+            <div class="scanner-corner corner-bl"></div>
+            <div class="scanner-corner corner-br"></div>
+            <div class="scanner-wrapper">
+              <div id="reader" style="width: 100%;"></div>
+            </div>
+            <div class="scanner-actions">
+              <button id="scanner-toggle" type="button" class="btn btn-manual-verify w-100 py-2">
+                <i class="bi bi-camera me-1"></i> Mulai Scanner
+              </button>
+            </div>
+            <!-- <div id="camera-focus-controls" class="camera-focus-controls d-none" aria-live="polite">
+              <div class="d-flex align-items-center justify-content-between gap-2">
+                <button id="auto-focus-button" type="button" class="btn btn-focus">
+                  <i class="bi bi-bullseye me-1"></i> Fokus otomatis
+                </button>
+                <small id="focus-status" class="focus-status">Kamera siap</small>
+              </div>
+              <div id="manual-focus-control" class="manual-focus-control d-none">
+                <label for="focus-distance" class="form-label mb-1">Atur fokus</label>
+                <input id="focus-distance" type="range" class="form-range" aria-label="Atur fokus kamera">
+              </div>
+            </div> -->
           </div>
         </div>
 
         <!-- Alert messages -->
-        <div id="scan-message" class="alert alert-info text-center d-none border-0 shadow-sm transition" role="alert">
+        <div id="scan-message" class="alert alert-info text-center d-none transition" role="alert">
           <div class="d-flex align-items-center justify-content-center">
             <span class="spinner-border spinner-border-sm me-2 d-none" id="scan-spinner" role="status"></span>
             <span id="scan-message-text" class="fw-bold small">Memproses data QR...</span>
@@ -197,25 +528,25 @@
         </div>
 
         <!-- Manual Login Entry -->
-        <div class="accordion border-0 shadow-sm rounded-3 mt-4" id="manualLoginAccordion">
+        <div class="accordion border-0 mt-4" id="manualLoginAccordion">
           <div class="accordion-item border-0">
             <h2 class="accordion-header" id="headingManual">
-              <button class="accordion-button collapsed text-secondary fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseManual" aria-expanded="false" aria-controls="collapseManual" style="font-size: 0.85rem;">
+              <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseManual" aria-expanded="false" aria-controls="collapseManual">
                 <i class="bi bi-keyboard me-2 fs-5"></i> Masukkan NIP Lama Secara Manual
               </button>
             </h2>
             <div id="collapseManual" class="accordion-collapse collapse" aria-labelledby="headingManual" data-bs-parent="#manualLoginAccordion">
-              <div class="accordion-body bg-light">
+              <div class="accordion-body">
                 <form id="manual-login-form">
                   <div class="mb-3">
-                    <label for="manual_nip" class="form-label small fw-bold text-dark">NIP Lama Pegawai</label>
+                    <label for="manual_nip" class="form-label">NIP Lama Pegawai</label>
                     <div class="input-group">
                       <span class="input-group-text bg-white"><i class="bi bi-person text-secondary"></i></span>
                       <input type="text" class="form-control" id="manual_nip" placeholder="Contoh: 340014249" required>
                     </div>
                   </div>
-                  <button type="submit" class="btn btn-primary btn-manual-verify w-100 py-2">
-                    <i class="bi bi-shield-check me-1"></i> Verifikasi Pegawai
+                  <button type="submit" class="btn btn-manual-verify w-100 py-2.5">
+                    <i class="bi bi-shield-check me-1"></i> Masuk
                   </button>
                 </form>
               </div>
@@ -226,41 +557,158 @@
       </div>
     </div>
 
-    <div class="text-center mt-3 text-white-50 small">
-      Sistem Pelaporan Kerusakan TI &copy; 2026. BPS Provinsi Jambi
+    <div class="text-center footer-text">
+      &copy; Tim IPDS BPS Provinsi Jambi {{ date('Y') }}
     </div>
 
   </div>
 
   <!-- JS Files -->
   <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-  <!-- HTML5 QR Code CDN -->
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <!-- Fast QR scanner engine (uses Web Worker / Barcode Detector when available) -->
+  <script src="https://unpkg.com/qr-scanner@1.4.2/qr-scanner.umd.min.js" type="text/javascript"></script>
 
   <script>
     const messageDiv = document.getElementById('scan-message');
     const messageText = document.getElementById('scan-message-text');
     const spinner = document.getElementById('scan-spinner');
+    const reader = document.getElementById('reader');
+    const scannerToggle = document.getElementById('scanner-toggle');
+    const focusControls = document.getElementById('camera-focus-controls');
+    const autoFocusButton = document.getElementById('auto-focus-button');
+    const focusStatus = document.getElementById('focus-status');
+    const manualFocusControl = document.getElementById('manual-focus-control');
+    const focusDistanceInput = document.getElementById('focus-distance');
+    let activeCameraTrack = null;
+    let activeCameraCapabilities = null;
+    let scannerRunning = false;
+    let isVerifying = false;
+    let focusDistanceTimer = null;
 
-    function onScanSuccess(decodedText, decodedResult) {
-      console.log(`Scan result: ${decodedText}`);
-      
-      // Stop scanner
-      html5QrcodeScanner.clear();
+    reader.innerHTML = '<video id="qr-video" autoplay muted playsinline></video>';
+    const qrVideo = document.getElementById('qr-video');
 
-      verifyNip(decodedText);
+    function resetFocusControls() {
+      activeCameraTrack = null;
+      activeCameraCapabilities = null;
+      focusControls.classList.add('d-none');
+      manualFocusControl.classList.add('d-none');
     }
 
-    function onScanFailure(error) {
-      // Ignored to avoid log spamming
+    function getFocusModeConstraint(capabilities) {
+      const modes = capabilities.focusMode || [];
+      return ['continuous', 'single-shot', 'auto'].find(mode => modes.includes(mode));
     }
 
-    let html5QrcodeScanner = new Html5QrcodeScanner(
-      "reader", 
-      { fps: 15, qrbox: { width: 250, height: 250 } },
-      /* verbose= */ false
+    async function requestAutomaticFocus() {
+      const focusMode = activeCameraCapabilities && getFocusModeConstraint(activeCameraCapabilities);
+      if (!activeCameraTrack || !focusMode) return;
+
+      autoFocusButton.disabled = true;
+      focusStatus.textContent = 'Sedang memfokuskan...';
+      try {
+        await activeCameraTrack.applyConstraints({ advanced: [{ focusMode }] });
+        focusStatus.textContent = 'Fokus otomatis aktif';
+      } catch (error) {
+        focusStatus.textContent = 'Fokus tidak dapat diatur';
+      } finally {
+        autoFocusButton.disabled = false;
+      }
+    }
+
+    async function applyManualFocusDistance() {
+      if (!activeCameraTrack || !activeCameraCapabilities) return;
+      const constraint = { focusDistance: Number(focusDistanceInput.value) };
+      if ((activeCameraCapabilities.focusMode || []).includes('manual')) constraint.focusMode = 'manual';
+
+      try {
+        await activeCameraTrack.applyConstraints({ advanced: [constraint] });
+        focusStatus.textContent = 'Fokus manual diterapkan';
+      } catch (error) {
+        focusStatus.textContent = 'Fokus manual tidak tersedia';
+      }
+    }
+
+    async function prepareFocusControls() {
+      const stream = qrVideo.srcObject;
+      const track = stream && stream.getVideoTracks()[0];
+      if (!track || typeof track.getCapabilities !== 'function') return;
+
+      const capabilities = track.getCapabilities();
+      const automaticFocus = getFocusModeConstraint(capabilities);
+      const focusDistance = capabilities.focusDistance;
+      if (!automaticFocus && !focusDistance) return;
+
+      activeCameraTrack = track;
+      activeCameraCapabilities = capabilities;
+      focusControls.classList.remove('d-none');
+      autoFocusButton.classList.toggle('d-none', !automaticFocus);
+
+      if (focusDistance) {
+        const settings = track.getSettings();
+        focusDistanceInput.min = focusDistance.min;
+        focusDistanceInput.max = focusDistance.max;
+        focusDistanceInput.step = focusDistance.step || 0.01;
+        focusDistanceInput.value = settings.focusDistance ?? focusDistance.min;
+        manualFocusControl.classList.remove('d-none');
+      } else {
+        manualFocusControl.classList.add('d-none');
+      }
+
+      focusStatus.textContent = automaticFocus ? 'Fokus kontinu aktif untuk QR jarak dekat' : 'Geser untuk mengatur fokus';
+      if (automaticFocus) await requestAutomaticFocus();
+    }
+
+    async function stopScanner() {
+      try {
+        if (scannerRunning) await qrScanner.stop();
+      } finally {
+        scannerRunning = false;
+        resetFocusControls();
+        scannerToggle.innerHTML = '<i class="bi bi-camera me-1"></i> Mulai Scanner';
+      }
+    }
+
+    async function startScanner() {
+      if (scannerRunning) return stopScanner();
+      scannerToggle.disabled = true;
+      try {
+        await qrScanner.start();
+        scannerRunning = true;
+        scannerToggle.innerHTML = '<i class="bi bi-stop-circle me-1"></i> Stop Scanning';
+        await prepareFocusControls();
+      } catch (error) {
+        messageDiv.classList.remove('d-none', 'alert-info', 'alert-success');
+        messageDiv.classList.add('alert-danger');
+        messageText.innerText = 'Kamera tidak dapat diakses. Periksa izin kamera Anda.';
+      } finally {
+        scannerToggle.disabled = false;
+      }
+    }
+
+    function onScanSuccess(decodedText) {
+      if (isVerifying) return;
+      isVerifying = true;
+      stopScanner().finally(() => verifyNip(decodedText));
+    }
+
+    const qrScanner = new QrScanner(
+      qrVideo,
+      result => onScanSuccess(result.data),
+      {
+        preferredCamera: 'environment',
+        maxScansPerSecond: 25,
+        highlightScanRegion: false,
+        highlightCodeOutline: false,
+        returnDetailedScanResult: true,
+      }
     );
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    scannerToggle.addEventListener('click', startScanner);
+    autoFocusButton.addEventListener('click', requestAutomaticFocus);
+    focusDistanceInput.addEventListener('input', () => {
+      clearTimeout(focusDistanceTimer);
+      focusDistanceTimer = setTimeout(applyManualFocusDistance, 120);
+    });
 
     // Manual Input Form
     document.getElementById('manual-login-form').addEventListener('submit', function(e) {
@@ -311,7 +759,8 @@
         // Re-enable scanning after 3.5 seconds
         setTimeout(() => {
           messageDiv.classList.add('d-none');
-          html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+          isVerifying = false;
+          startScanner();
         }, 3500);
       });
     }
