@@ -582,7 +582,6 @@
     let activeCameraTrack = null;
     let activeCameraCapabilities = null;
     let scannerRunning = false;
-    let scannerTransitioning = false;
     let isVerifying = false;
     let focusDistanceTimer = null;
 
@@ -660,73 +659,35 @@
       if (automaticFocus) await requestAutomaticFocus();
     }
 
-    function showCameraAccessError(error) {
-      messageDiv.classList.remove('d-none', 'alert-info', 'alert-success');
-      messageDiv.classList.add('alert-danger');
-      spinner.classList.add('d-none');
-
-      if (['NotAllowedError', 'SecurityError', 'PermissionDeniedError'].includes(error && error.name)) {
-        messageText.innerText = 'Kamera tidak dapat diakses. Periksa izin kamera Anda.';
-      } else if (error && error.name === 'NotFoundError') {
-        messageText.innerText = 'Kamera tidak ditemukan pada perangkat ini.';
-      } else {
-        messageText.innerText = 'Kamera gagal dinyalakan. Coba lagi atau pilih perangkat lain.';
-      }
-    }
-
-    function setScannerButton(isRunning, isBusy = false) {
-      scannerToggle.disabled = isBusy;
-      scannerToggle.innerHTML = isBusy
-        ? '<span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span> Memproses...'
-        : isRunning
-          ? '<i class="bi bi-stop-circle me-1"></i> Stop Scanning'
-          : '<i class="bi bi-camera me-1"></i> Mulai Scanner';
-    }
-
     async function stopScanner() {
-      if (!scannerRunning || scannerTransitioning) return;
-      scannerTransitioning = true;
-      setScannerButton(true, true);
       try {
-        await qrScanner.stop();
+        if (scannerRunning) await qrScanner.stop();
       } finally {
         scannerRunning = false;
-        scannerTransitioning = false;
         resetFocusControls();
-        setScannerButton(false);
+        scannerToggle.innerHTML = '<i class="bi bi-camera me-1"></i> Mulai Scanner';
       }
     }
 
     async function startScanner() {
-      if (scannerRunning || scannerTransitioning) return;
-      scannerTransitioning = true;
-      setScannerButton(false, true);
-      messageDiv.classList.remove('d-none', 'alert-danger', 'alert-success');
-      messageDiv.classList.add('alert-info');
-      spinner.classList.remove('d-none');
-      messageText.innerText = 'Meminta izin akses kamera...';
+      if (scannerRunning) return stopScanner();
+      scannerToggle.disabled = true;
       try {
-        // start() memanggil getUserMedia di dalam klik pengguna ini, sehingga browser meminta izin kamera.
         await qrScanner.start();
         scannerRunning = true;
+        scannerToggle.innerHTML = '<i class="bi bi-stop-circle me-1"></i> Stop Scanning';
         await prepareFocusControls();
-        spinner.classList.add('d-none');
-        messageDiv.classList.add('d-none');
       } catch (error) {
-        scannerRunning = false;
-        showCameraAccessError(error);
+        messageDiv.classList.remove('d-none', 'alert-info', 'alert-success');
+        messageDiv.classList.add('alert-danger');
+        messageText.innerText = 'Kamera tidak dapat diakses. Periksa izin kamera Anda.';
       } finally {
-        scannerTransitioning = false;
-        setScannerButton(scannerRunning);
+        scannerToggle.disabled = false;
       }
     }
 
-    function toggleScanner() {
-      return scannerRunning ? stopScanner() : startScanner();
-    }
-
     function onScanSuccess(decodedText) {
-      if (isVerifying || scannerTransitioning || !scannerRunning) return;
+      if (isVerifying) return;
       isVerifying = true;
       stopScanner().finally(() => verifyNip(decodedText));
     }
@@ -742,7 +703,7 @@
         returnDetailedScanResult: true,
       }
     );
-    scannerToggle.addEventListener('click', toggleScanner);
+    scannerToggle.addEventListener('click', startScanner);
     autoFocusButton.addEventListener('click', requestAutomaticFocus);
     focusDistanceInput.addEventListener('input', () => {
       clearTimeout(focusDistanceTimer);
