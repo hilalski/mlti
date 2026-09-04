@@ -37,12 +37,14 @@ Route::middleware(['auth'])->group(function () {
     
     // User Report History
     Route::get('/reports/history', [ReportController::class, 'history'])->name('reports.history');
+    Route::patch('/reports/history/{ticketId}/rating', [ReportController::class, 'rate'])->name('reports.history.rate');
     Route::get('/reports/history/{id}', [ReportController::class, 'showReport'])->name('reports.history.show');
 });
 
 // Admin / Jarkom Flow
 Route::middleware(['auth', 'jarkom'])->prefix('admin')->as('admin.')->group(function () {
     Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/export', [AdminReportController::class, 'export'])->name('reports.export');
     Route::get('/reports/{id}', [AdminReportController::class, 'show'])->name('reports.show');
     Route::patch('/reports/{id}', [AdminReportController::class, 'update'])->name('reports.update');
     

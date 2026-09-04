@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Str;
 
-#[Fillable(['device_id', 'id_ruang', 'reported_by', 'issue_type', 'description', 'status', 'technician_notes', 'handled_by', 'id_vendor', 'resolved_at'])]
+#[Fillable(['device_id', 'id_ruang', 'reported_by', 'issue_type', 'description', 'status', 'rating', 'technician_notes', 'handled_by', 'id_vendor', 'resolved_at'])]
 class Report extends Model
 {
     protected $casts = [
         'resolved_at' => 'datetime',
+        'rating' => 'integer',
     ];
 
     protected static function booted(): void

@@ -40,7 +40,7 @@
                   <th scope="col" class="d-none d-md-table-cell">Deskripsi</th>
                   <th scope="col" class="d-none d-lg-table-cell">Tanggal</th>
                   <th scope="col">Status</th>
-                  <th scope="col" class="text-center">Aksi</th>
+                  <th scope="col" class="report-history-action text-start ps-1" style="width: 64px;">Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -97,7 +97,7 @@
                     </td>
 
                     {{-- Action --}}
-                    <td class="text-center text-nowrap">
+                    <td class="report-history-action text-start text-nowrap ps-1 pe-0">
                       <a href="{{ route('reports.history.show', $report->ticket_id) }}" class="btn btn-sm btn-primary py-1 px-2 fw-semibold">
                         <i class="bi bi-eye-fill"></i><span class="d-none d-sm-inline ms-1">Detail</span>
                       </a>
@@ -128,4 +128,25 @@
     </div>
   </div>
 </section>
+
+<style>
+  .report-history-table .report-history-action {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 575.98px) {
+    .report-history-table th,
+    .report-history-table td {
+      padding-left: .45rem;
+      padding-right: .45rem;
+    }
+
+    .report-history-table .report-history-action {
+      width: 58px !important;
+      padding-left: .2rem !important;
+      padding-right: 0 !important;
+      text-align: left !important;
+    }
+  }
+</style>
 @endsection

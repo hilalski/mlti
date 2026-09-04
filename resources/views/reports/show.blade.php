@@ -113,6 +113,32 @@
                 Diselesaikan pada: <strong>{{ $report->resolved_at->format('d M Y, H:i') }}</strong>
               </div>
             @endif
+
+            @if($report->status === 'selesai')
+              <div class="mt-4 pt-3 border-top text-center" aria-label="Penilaian penanganan laporan">
+                @if($report->rating)
+                  <div class="small text-muted mb-1">Penilaian Anda</div>
+                  <div class="text-warning fs-4" title="{{ $report->rating }} dari 5 bintang">
+                    @for($star = 1; $star <= 5; $star++)
+                      <i class="bi {{ $star <= $report->rating ? 'bi-star-fill' : 'bi-star' }}"></i>
+                    @endfor
+                  </div>
+                  <small class="text-muted">Ke Bekasi, Terima Kasii.</small>
+                @else
+                  <div class="fw-bold text-dark mb-1"><i class="bi bi-stars text-warning me-1"></i> Bagaimana penanganan kami?</div>
+                  <p class="small text-muted mb-2">Berikan penilaian bintang untuk layanan teknisi.</p>
+                  <form action="{{ route('reports.history.rate', $report->ticket_id) }}" method="POST" class="d-flex justify-content-center gap-2">
+                    @csrf
+                    @method('PATCH')
+                    @for($star = 1; $star <= 5; $star++)
+                      <button type="submit" name="rating" value="{{ $star }}" class="btn btn-link text-warning p-0 border-0 fs-3" title="Beri {{ $star }} bintang" aria-label="Beri {{ $star }} bintang">
+                        <i class="bi bi-star-fill"></i>
+                      </button>
+                    @endfor
+                  </form>
+                @endif
+              </div>
+            @endif
           @else
             <div class="alert alert-success border-0 py-3 px-4 mb-0 shadow-sm" style="border-left: 4px solid #99C2FF !important; background: linear-gradient(135deg, rgba(153, 194, 255, 0.08), rgba(255, 132, 186, 0.08)) !important;">
               <div class="d-flex align-items-start">

@@ -117,6 +117,25 @@ class ReportController extends Controller
         return view('reports.history', compact('reports'));
     }
 
+    public function rate(Request $request, string $ticketId)
+    {
+        $request->validate([
+            'rating' => ['required', 'integer', 'between:1,5'],
+        ]);
+
+        $report = Report::where('ticket_id', $ticketId)
+            ->where('reported_by', Auth::user()->nip_lama)
+            ->firstOrFail();
+
+        if ($report->status !== 'selesai') {
+            return back()->with('error', 'Penilaian hanya dapat diberikan setelah laporan selesai.');
+        }
+
+        $report->update(['rating' => $request->integer('rating')]);
+
+        return back()->with('success', 'Terima kasih, penilaian Anda telah disimpan.');
+    }
+
     public function showReport($ticketId)
     {
         $user = Auth::user();

@@ -32,7 +32,7 @@
 
         <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('admin.reports.*') ? '' : 'collapsed' }}" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#">
-            <i class="bi bi-file-earmark-text-fill"></i><span>Laporan Masuk</span><i class="bi bi-chevron-down ms-auto"></i>
+            <i class="bi bi-file-earmark-text-fill"></i><span>Laporan</span><i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul id="reports-nav" class="nav-content collapse {{ request()->routeIs('admin.reports.*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
             <li>

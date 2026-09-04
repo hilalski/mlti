@@ -18,8 +18,11 @@
     <div class="col-12">
 
       <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between align-items-center gap-2">
           <h5 class="card-title my-0 text-white"><i class="bi bi-list-task me-1"></i> Semua Laporan Kerusakan</h5>
+          <a href="{{ route('admin.reports.export', request()->only(['status', 'issue_type'])) }}" class="btn btn-sm btn-light text-success text-nowrap">
+            <i class="bi bi-file-earmark-excel me-1"></i> Unduh Excel
+          </a>
         </div>
 
         <div class="card-body pt-3">
