@@ -73,13 +73,11 @@ a:hover {
     z-index: 1000;
 }
 
-.header .logo span {
-    background: linear-gradient(135deg, #FF84BA, #99C2FF);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+.header .brand-logo {
+    width: 122px;
+    max-height: 36px;
+    margin: 0;
+    object-fit: contain;
 }
 
 .header .toggle-sidebar-btn {
@@ -182,6 +180,17 @@ a:hover {
     padding-left: 16px !important;
     margin-top: 15px !important;
     margin-bottom: 8px !important;
+}
+
+.sidebar-mobile-logo {
+    padding: 2px 16px 18px;
+    list-style: none;
+}
+
+.sidebar-mobile-logo img {
+    display: block;
+    width: 128px;
+    height: auto;
 }
 
 /* Main Content Wrapper */

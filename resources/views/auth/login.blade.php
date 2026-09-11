@@ -126,14 +126,12 @@
       border-bottom: none;
     }
 
-    .logo-title {
-      font-size: 2.3rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #FF84BA 0%, #99C2FF 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 6px;
+    .login-logo {
+      display: block;
+      width: 132px;
+      max-height: 44px;
+      margin: 0 auto 8px;
+      object-fit: contain;
     }
 
     .logo-subtitle {
@@ -477,7 +475,7 @@
       
       <!-- Modern Minimalist Header -->
       <div class="login-card-header">
-        <h1 class="logo-title">MLTI</h1>
+        <img src="{{ asset('assets/img/logo.svg') }}" class="login-logo" alt="MLTI">
         <p class="logo-subtitle">BPS Provinsi Jambi</p>
       </div>
 

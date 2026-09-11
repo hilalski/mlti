@@ -2,8 +2,8 @@
 <header id="header" class="header fixed-top d-flex align-items-center">
 
   <div class="d-flex align-items-center justify-content-between">
-    <a href="{{ route('dashboard') }}" class="logo d-flex align-items-center">
-      <span class="d-none d-lg-block text-white" style="color: var(--color-accent) !important; font-size: 1.6rem; font-weight: 800; letter-spacing: 0.5px;">MLTI</span>
+    <a href="{{ route('dashboard') }}" class="logo d-none d-xl-flex align-items-center">
+      <img src="{{ asset('assets/img/logo.svg') }}" class="brand-logo" alt="MLTI">
     </a>
     <i class="bi bi-list toggle-sidebar-btn text-white"></i>
   </div><!-- End Logo -->

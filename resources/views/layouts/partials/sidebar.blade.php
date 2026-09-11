@@ -3,6 +3,12 @@
 
   <ul class="sidebar-nav" id="sidebar-nav">
 
+    <li class="sidebar-mobile-logo d-xl-none">
+      <a href="{{ route('dashboard') }}" aria-label="Beranda MLTI">
+        <img src="{{ asset('assets/img/logo.svg') }}" alt="MLTI">
+      </a>
+    </li>
+
     <li class="nav-heading text-secondary mb-2 small fw-bold">Pengguna</li>
 
     <li class="nav-item">
