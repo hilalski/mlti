@@ -183,14 +183,26 @@ a:hover {
 }
 
 .sidebar-mobile-logo {
-    padding: 2px 16px 18px;
+    padding: 2px 16px 14px;
     list-style: none;
+}
+
+.sidebar-mobile-logo a {
+    display: inline-flex;
+    width: 108px;
+    height: 36px;
+    align-items: center;
+    overflow: hidden;
 }
 
 .sidebar-mobile-logo img {
     display: block;
-    width: 128px;
-    height: auto;
+    width: 108px !important;
+    height: 36px !important;
+    max-width: 108px !important;
+    max-height: 36px !important;
+    margin: 0 !important;
+    object-fit: contain;
 }
 
 /* Main Content Wrapper */
