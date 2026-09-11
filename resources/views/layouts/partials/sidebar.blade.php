@@ -3,9 +3,9 @@
 
   <ul class="sidebar-nav" id="sidebar-nav">
 
-    <li class="sidebar-mobile-logo d-xl-none">
-      <a href="{{ route('dashboard') }}" aria-label="Beranda MLTI">
-        <img src="{{ asset('assets/img/logo.svg') }}" alt="MLTI">
+    <li class="sidebar-mobile-logo d-xl-none" style="height: 52px; overflow: hidden;">
+      <a href="{{ route('dashboard') }}" aria-label="Beranda MLTI" style="display: inline-flex; width: 108px; height: 36px; align-items: center; overflow: hidden;">
+        <img src="{{ asset('assets/img/logo.svg') }}" alt="MLTI" style="display: block; width: 108px; height: 36px; max-width: 108px; max-height: 36px; margin: 0; object-fit: contain;">
       </a>
     </li>
 
