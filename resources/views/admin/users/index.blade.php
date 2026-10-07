@@ -25,27 +25,38 @@
 
         <div class="card-body pt-3">
 
-          <!-- Search & Room Filters -->
+          <!-- Search & Filters -->
           <form method="GET" action="{{ route('admin.users.index') }}" class="row g-2 mb-4 p-3 bg-light rounded align-items-end">
-            <div class="col-12 col-md-5">
+            <div class="col-12 col-md-4">
               <label for="search" class="form-label small fw-bold text-dark">Cari Pengguna</label>
               <div class="input-group">
                 <span class="input-group-text bg-white"><i class="bi bi-search text-secondary"></i></span>
                 <input type="text" name="search" id="search" value="{{ request('search') }}" class="form-control form-control-sm" placeholder="Cari Nama, NIP, Jabatan...">
               </div>
             </div>
-            <div class="col-8 col-md-4">
-              <label for="room_id" class="form-label small fw-bold text-dark">Filter Ruangan</label>
-              <select name="room_id" id="room_id" class="form-select form-select-sm">
-                <option value="">-- Semua Ruangan --</option>
-                @foreach($rooms as $room)
-                  <option value="{{ $room->id }}" {{ request('room_id') == $room->id ? 'selected' : '' }}>
-                    {{ $room->ruang }}
+            <div class="col-6 col-md-3">
+              <label for="team_id" class="form-label small fw-bold text-dark">Filter Fungsi</label>
+              <select name="team_id" id="team_id" class="form-select form-select-sm">
+                <option value="">-- Semua Fungsi --</option>
+                @foreach($teams as $team)
+                  <option value="{{ $team->id }}" {{ request('team_id') == $team->id ? 'selected' : '' }}>
+                    {{ $team->fungsi }}
                   </option>
                 @endforeach
               </select>
             </div>
-            <div class="col-4 col-md-3 d-flex gap-2">
+            <div class="col-6 col-md-3">
+              <label for="satker_id" class="form-label small fw-bold text-dark">Filter Satker</label>
+              <select name="satker_id" id="satker_id" class="form-select form-select-sm">
+                <option value="">-- Semua Satker --</option>
+                @foreach($satkers as $satker)
+                  <option value="{{ $satker->id }}" {{ request('satker_id') == $satker->id ? 'selected' : '' }}>
+                    {{ $satker->satker }}
+                  </option>
+                @endforeach
+              </select>
+            </div>
+            <div class="col-12 col-md-2 d-flex gap-2">
               <button type="submit" class="btn btn-primary btn-sm flex-grow-1"><i class="bi bi-funnel"></i> Filter</button>
               <a href="{{ route('admin.users.index') }}" class="btn btn-secondary btn-sm"><i class="bi bi-arrow-counterclockwise"></i></a>
             </div>
@@ -57,7 +68,7 @@
                 <tr>
                   <th scope="col">Nama & NIP</th>
                   <th scope="col" class="d-none d-md-table-cell">Jabatan</th>
-                  <th scope="col" class="d-none d-sm-table-cell">Ruangan</th>
+                  <th scope="col" class="d-none d-sm-table-cell">Fungsi</th>
                   <th scope="col">Akses</th>
                   <th scope="col" class="text-center">Aksi</th>
                 </tr>
@@ -69,13 +80,13 @@
                     <td style="max-width: 200px;">
                       <div class="fw-bold text-dark" style="font-size: 0.875rem;">{{ $u->name }}</div>
                       <small class="text-muted d-block" style="font-size: 0.72rem;">{{ $u->nip_lama }}</small>
-                      {{-- Mobile: show jabatan + room inline --}}
+                      {{-- Mobile: show jabatan + fungsi inline --}}
                       <div class="d-sm-none mt-1">
                         @if($u->jabatan)
                           <small class="text-muted" style="font-size: 0.72rem;">{{ $u->jabatan }}</small>
                         @endif
                         <small class="d-block fw-semibold" style="color: #99C2FF; font-size: 0.72rem;">
-                          <i class="bi bi-house-door-fill me-1"></i>{{ $u->room->ruang ?? '-' }}
+                          <i class="bi bi-diagram-3-fill me-1"></i>{{ $u->team->fungsi ?? '-' }}
                         </small>
                       </div>
                     </td>
@@ -83,10 +94,10 @@
                     {{-- Jabatan --}}
                     <td class="d-none d-md-table-cell small">{{ $u->jabatan ?: '-' }}</td>
 
-                    {{-- Ruangan --}}
+                    {{-- Fungsi --}}
                     <td class="d-none d-sm-table-cell">
                       <span class="small fw-semibold" style="color: #99C2FF;">
-                        {{ $u->room->ruang ?? 'Tidak Diketahui' }}
+                        {{ $u->team->fungsi ?? 'Tidak Diketahui' }}
                       </span>
                     </td>
 

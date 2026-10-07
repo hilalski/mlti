@@ -1,7 +1,7 @@
 [
     {
         "id": 1,
-        "fungsi": "Kepala Kantor"
+        "fungsi": "Kepala BPS Provinsi"
     },
     {
         "id": 2,
@@ -34,6 +34,18 @@
     {
         "id": 9,
         "fungsi": "IPDS"
+    },
+    {
+        "id": 10,
+        "fungsi": "Kepala BPS Kabupaten/Kota"
+    },
+    {
+        "id": 11,
+        "fungsi": "Kepala Sub Bagian Umum"
+    },
+    {
+        "id": 12,
+        "fungsi": "Staf BPS Kabupaten/Kota"
     },
     {
         "id": 99,

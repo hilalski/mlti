@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Team;
 use App\Models\Room;
+use App\Models\Satker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -14,7 +15,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::with(['room']);
+        $query = User::with(['team', 'satker']);
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -26,14 +27,19 @@ class UserController extends Controller
             });
         }
 
-        if ($request->filled('room_id')) {
-            $query->where('id_ruang', $request->room_id);
+        if ($request->filled('team_id')) {
+            $query->where('fungsi', $request->team_id);
         }
 
-        $users = $query->paginate(10)->withQueryString();
-        $rooms = Room::orderBy('ruang')->get();
+        if ($request->filled('satker_id')) {
+            $query->where('id_satker', $request->satker_id);
+        }
 
-        return view('admin.users.index', compact('users', 'rooms'));
+        $users = $query->orderBy('nip_lama')->paginate(10)->withQueryString();
+        $teams = Team::orderBy('fungsi')->get();
+        $satkers = Satker::orderBy('satker')->get();
+
+        return view('admin.users.index', compact('users', 'teams', 'satkers'));
     }
 
     public function create()
@@ -54,6 +60,7 @@ class UserController extends Controller
             'jabatan' => 'nullable|string|max:255',
             'id_ruang' => 'nullable|exists:rooms,id',
             'is_jarkom' => 'nullable|in:0,1',
+            'is_umum' => 'nullable|in:0,1',
             'password' => 'nullable|string|min:6',
         ]);
 
@@ -70,6 +77,7 @@ class UserController extends Controller
             'jabatan' => $request->jabatan,
             'id_ruang' => $request->id_ruang ?: null,
             'is_jarkom' => $request->is_jarkom ?? 0,
+            'is_umum' => $request->is_umum ?? 0,
             'password' => $password,
         ]);
 
@@ -101,6 +109,7 @@ class UserController extends Controller
             'jabatan' => 'nullable|string|max:255',
             'id_ruang' => 'nullable|exists:rooms,id',
             'is_jarkom' => 'nullable|in:0,1',
+            'is_umum' => 'nullable|in:0,1',
             'password' => 'nullable|string|min:6',
         ]);
 
@@ -113,6 +122,7 @@ class UserController extends Controller
             'jabatan' => $request->jabatan,
             'id_ruang' => $request->id_ruang ?: null,
             'is_jarkom' => $request->is_jarkom ?? 0,
+            'is_umum' => $request->is_umum ?? 0,
         ];
 
         if ($request->filled('password')) {

@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'jarkom' => \App\Http\Middleware\JarkomMiddleware::class,
+            'umum' => \App\Http\Middleware\UmumMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

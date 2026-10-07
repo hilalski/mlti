@@ -167,8 +167,8 @@ a:hover {
 }
 
 .sidebar-nav .nav-content a.active i {
-    background-color: #FF84BA !important;
     color: #FF84BA !important;
+    background-color: transparent !important;
 }
 
 .sidebar-nav .nav-heading {

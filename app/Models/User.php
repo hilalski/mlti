@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['nip_lama', 'name', 'email', 'nip_baru', 'fungsi', 'jabatan', 'password', 'is_jarkom', 'id_ruang'])]
+#[Fillable(['nip_lama', 'name', 'email', 'nip_baru', 'fungsi', 'jabatan', 'password', 'is_jarkom', 'is_umum', 'id_ruang', 'id_satker'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -31,6 +31,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_jarkom' => 'integer',
+            'is_umum' => 'integer',
         ];
     }
 
@@ -47,5 +48,15 @@ class User extends Authenticatable
     public function room()
     {
         return $this->belongsTo(Room::class, 'id_ruang');
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class, 'fungsi');
+    }
+
+    public function satker()
+    {
+        return $this->belongsTo(Satker::class, 'id_satker');
     }
 }

@@ -30,6 +30,7 @@
   <link href="{{ asset('assets/css/custom.css') }}" rel="stylesheet">
 
   @yield('styles')
+  @stack('styles')
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -185,6 +186,7 @@
   </script>
 
   @yield('scripts')
+  @stack('scripts')
 </body>
 
 </html>

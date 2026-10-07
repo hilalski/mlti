@@ -20,6 +20,9 @@
     <button type="button" class="btn btn-primary btn-sm px-3 py-2 fw-semibold shadow-sm" data-bs-toggle="modal" data-bs-target="#openTicketModal">
       <i class="bi bi-ticket-detailed-fill me-1"></i> Open Ticket
     </button>
+    <a href="{{ route('reports.history') }}" class="btn btn-outline-primary btn-sm px-3 py-2 fw-semibold shadow-sm">
+      <i class="bi bi-clock-history me-1"></i> Riwayat
+    </a>
   </div>
 </div><!-- End Page Title -->
 

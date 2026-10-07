@@ -68,6 +68,10 @@
         "ruang": "Ruang Humas"
     },
     {
+        "id": 98,
+        "ruang": "BPS Kabupaten Kota"
+    },
+    {
         "id": 99,
         "ruang": "Tidak Diketahui"
     }

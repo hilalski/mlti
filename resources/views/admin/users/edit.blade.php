@@ -118,6 +118,10 @@
                 @error('is_jarkom')
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
+              <div class="form-check mt-3">
+                <input class="form-check-input" type="checkbox" value="1" name="is_umum" id="is_umum" {{ old('is_umum', $user->is_umum) ? 'checked' : '' }}>
+                <label class="form-check-label" for="is_umum">Tim Umum</label>
+              </div>
               </div>
 
               <!-- Password -->
